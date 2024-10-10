@@ -28,6 +28,11 @@ export default function NavBar() {
             </NavbarBrand>
             <NavbarContent className="hidden sm:flex gap-3" justify="center">
                 <NavbarItem className="">
+                    <Link to={'docent'} className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all">
+                        Ver docente
+                    </Link>
+                </NavbarItem>
+                <NavbarItem className="">
                     <Link to={'student'} className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all">
                         Ver horario
                     </Link>

@@ -2,6 +2,7 @@ import { Navigate, RouteObject } from "react-router-dom";
 import { ValidationRoutes } from "../components/ValidationRoutes";
 import { HomePage } from "./pages/HomePage";
 import { Schedule, Subjects } from "./pages/estudent";
+import { Example } from "./pages/docent/Example";
 
 const validation = (status: string):boolean => {
     if (status === "authenticated") return true
@@ -20,6 +21,10 @@ export const AppRoutes: RouteObject = {
         {
             path: 'home',
             element: <HomePage />
+        },
+        {
+            path: 'docent',
+            element: <Example />
         },
         {
             path: 'student',
