@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nextui-org/button": "^2.0.38",
+    "@nextui-org/calendar": "^2.0.12",
     "@nextui-org/image": "^2.0.32",
     "@nextui-org/input": "^2.2.5",
     "@nextui-org/link": "^2.0.35",
