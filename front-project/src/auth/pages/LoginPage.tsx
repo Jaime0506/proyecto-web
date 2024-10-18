@@ -8,7 +8,7 @@ import { Link } from "react-router-dom"
 
 import login_student from '../../assets/login_student.svg'
 import { useAuth } from "../../hooks/useAuth"
-import { userExample } from "../../data/dataExample"
+import { supabase } from "../../config/supabaseClient"
 
 interface FormType {
     email: string
@@ -26,7 +26,8 @@ export const LoginPage = () => {
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        onLogin(userExample)
+        // logica envio de formulario
+
     }
 
     const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
