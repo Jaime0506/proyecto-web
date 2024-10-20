@@ -1,14 +1,11 @@
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 
-
 import { Link } from "react-router-dom";
 import { Button } from "@nextui-org/button";
 import { useAuth } from "../hooks/useAuth";
 
-
 export default function SideBar() {
   const { onLogout } = useAuth();
-
 
   return (
     <Navbar
@@ -24,7 +21,7 @@ export default function SideBar() {
             to={"docent"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
-            Menu Principal
+            Pagina Principal
           </Link>
         </NavbarItem>
         <NavbarItem className="mb-2">
@@ -32,7 +29,7 @@ export default function SideBar() {
             to={"student"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
-            Materias
+            Asignatura 1
           </Link>
         </NavbarItem>
         <NavbarItem className="mb-2">
@@ -40,22 +37,10 @@ export default function SideBar() {
             to={"student/subjects"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
-            Inscribir materias
+            Asignatura 2
           </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button
-            variant="ghost"
-            color="primary"
-            className="text-lg"
-            onClick={onLogout}
-          >
-            Cerrar sesión
-          </Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
   );
 }
-
-

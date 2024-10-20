@@ -32,9 +32,12 @@ export const AppRoutes: RouteObject = {
                 {
                     path: '',
                     element: <Navigate to={'schedule'} />
+                },{
+                    path: 'schedule',
+                    element: <Schedule />
                 },
                 {
-                    path: 'schedule',
+                    path: 'schedule/:asignatura',
                     element: <Schedule />
                 },
                 {

@@ -3,8 +3,10 @@ import { Calendar } from "@nextui-org/calendar";
 import { Image } from "@nextui-org/image";
 import { Card, CardHeader } from "@nextui-org/card";
 import InsiderNavBar from "../../../components/InsiderNavBar";
+import { useParams } from "react-router-dom";
 
 export const Schedule = () => {
+  const { asignatura } = useParams();
   return (
     <div className="flex w-full flex-col">
       <InsiderNavBar />
@@ -13,7 +15,7 @@ export const Schedule = () => {
         <Card className=" h-[250px]">
           <CardHeader className="absolute z-10 top-36 flex-col !items-start">
             <h4 className="text-white font-medium text-large text-7xl">
-              Asignatura
+              {asignatura ? asignatura : "vacio"}
             </h4>
           </CardHeader>
           <Image
