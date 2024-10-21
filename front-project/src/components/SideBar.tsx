@@ -15,7 +15,7 @@ export default function SideBar() {
       <NavbarContent className="flex flex-col pt-10 h-[calc(100vh-97.33px)] w-72">
         <NavbarItem className="mb-2">
           <Link
-            to={"docent"}
+            to={"home"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Pagina Principal
