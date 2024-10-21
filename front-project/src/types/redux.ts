@@ -15,6 +15,7 @@ export interface SubjectType {
     id: string
     name: string
     credits: number
+    image: string
     data_subject: SchedulesType
     available: number
 }

@@ -13,7 +13,7 @@ export const CardComponent = ({ subject }: CardComponentProps) => {
       <CardBody>
         <Image
           alt={subject.name}
-          src="https://concepto.de/wp-content/uploads/2014/08/programacion-2-e1551291144973.jpg"
+          src={subject.image}
           width={270}
           height={125}
         />

@@ -8,14 +8,14 @@ export const HomePage = () => {
   const renderCards = () => {
     return subjects?.map((subject, index) => (
       <Link to={`/app/student/schedule/${subject.name}`}>
-        <CardComponent subject={subject} />
+        <CardComponent key={index} subject={subject} />
       </Link>
     ));
   };
 
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-wrap gap-x-4 my-2 mx-20 ">{renderCards()}</div>
+      <div className="flex flex-wrap gap-x-4 my-2 mx-20">{renderCards()}</div>
     </div>
   );
 };
