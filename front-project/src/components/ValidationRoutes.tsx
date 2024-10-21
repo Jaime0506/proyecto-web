@@ -30,8 +30,6 @@ export const ValidationRoutes = ({
 
           <div className="flex flex-row">
             <SideBar />
-
-
             <Outlet />
           </div>
         </div>

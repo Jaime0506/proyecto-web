@@ -9,13 +9,10 @@ export default function SideBar() {
 
   return (
     <Navbar
-      className=" border-r-2 border-primary py-4 flex flex-col"
-      style={{ top: "97.33px", height: "700px", width: "300px" }}
+      className=" border-r-2 border-primary py-4 flex flex-col h-[calc(100vh-97.33px)] w-72"
+      style={{ top: "97.33px" }}
     >
-      <NavbarContent
-        className="flex flex-col pt-10"
-        style={{ height: "700px", width: "300px" }}
-      >
+      <NavbarContent className="flex flex-col pt-10 h-[calc(100vh-97.33px)] w-72">
         <NavbarItem className="mb-2">
           <Link
             to={"docent"}
