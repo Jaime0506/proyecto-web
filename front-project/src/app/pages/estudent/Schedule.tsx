@@ -12,7 +12,7 @@ export const Schedule = () => {
       <div className="flex gap-x-4 m-4">
         <Card className=" h-[250px]">
           <CardHeader className="absolute z-10 top-36 flex-col !items-start">
-            <h4 className="text-white font-medium text-large text-7xl">
+            <h4 className="text-white font-medium text-7xl">
               {asignatura ? asignatura : "vacio"}
             </h4>
           </CardHeader>

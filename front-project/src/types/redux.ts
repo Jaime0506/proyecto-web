@@ -30,10 +30,8 @@ export interface CareerType {
 
 export interface UserType {
     id: string
-    name: string
+    name: string | null
     email: string
-    semester: number
-    career_id: string
 }
 
 export interface AuthType {

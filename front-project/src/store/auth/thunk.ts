@@ -1,22 +1,30 @@
-import { supabase } from "../../config/supabaseClient"
+import { supabase } from "../../supabase/supabase"
+import { FormType } from "../../types/authForms"
 import { AppDispatch } from "../store"
+import { checking, login, logout } from "./authSlice"
 
-export const handleOnLogin = () => {
+export const handleOnLogin = (user: FormType) => {
+    return async (dispatch: AppDispatch) => {
 
+        dispatch(checking())
 
-    // return async (dispatch: AppDispatch) => {
+        const { data, error } = await supabase.auth.signInWithPassword(user)
 
-    //     const { data, error } = await supabase.auth.signInWithPassword({
-    //         email,
-    //         password,
-    //     })
-    //     if (error) {
-    //         console.error("Login failed:", error.message)
-    //         return { success: false, error: error.message }
-    //     }
-    //     return { success: true, data }}
+        if (error) {
+            console.log(error)
+            dispatch(logout())
 
+            return
+        }
+        
+        const userLoged = {
+            id: data.user.id,
+            name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
+            email: user.email
+        }
+        
+        console.log(data)
 
-    
-
+        dispatch(login(userLoged))
+    }
 }

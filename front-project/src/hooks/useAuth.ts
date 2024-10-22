@@ -1,5 +1,7 @@
-import { checking, login, logout } from "../store/auth/authSlice"
-import { UserType } from "../types/redux"
+import { checking, logout } from "../store/auth/authSlice"
+import { handleOnLogin } from "../store/auth/thunk"
+import { FormType } from "../types/authForms"
+
 import { useAppDispatch, useAppSelector } from "./useStore"
 
 export const useAuth = () => {
@@ -16,12 +18,8 @@ export const useAuth = () => {
         }, 1000)
     }
     
-    const onLogin = (user: UserType) => {
-        dispatch(checking())
-
-        setTimeout(() => {
-            dispatch(login(user))
-        }, 1000)
+    const onLogin = (user: FormType) => {
+        dispatch(handleOnLogin(user))
     }
 
     const onLogout = () => {
