@@ -179,6 +179,4 @@ export const userExample: UserType = {
     id: uuidv4(),
     email: "ejemplo@gmail.com",
     name: "Pepe",
-    career_id: "CARR123",
-    semester: 1
 }

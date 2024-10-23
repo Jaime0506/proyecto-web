@@ -12,7 +12,7 @@ export const useSubjects = () => {
   const handlerDataCareer = () => {
     if (!user) return [];
 
-    const subjects = dataCareer ? dataCareer.subjects[user?.semester - 1] : [];
+    const subjects = dataCareer ? dataCareer.subjects[0] : [];
 
     setSubjects(subjects);
   };
@@ -20,7 +20,7 @@ export const useSubjects = () => {
   useEffect(() => {
     if (user) {
       const temp = exampleCareer.filter(
-        (career) => career.id === user?.career_id
+        (career) => career.id === 'CARR123'
       )[0];
       setDataCareer(temp);
     }
