@@ -7,8 +7,8 @@ export const HomePage = () => {
 
   const renderCards = () => {
     return subjects?.map((subject, index) => (
-      <Link to={`/app/student/schedule/${subject.name}`}>
-        <CardComponent key={index} subject={subject} />
+      <Link key={index} to={`/app/student/schedule/${subject.name}`}>
+        <CardComponent subject={subject} />
       </Link>
     ));
   };

@@ -1,5 +1,5 @@
-import { checking, logout } from "../store/auth/authSlice"
-import { handleOnLogin } from "../store/auth/thunk"
+import { checking } from "../store/auth/authSlice"
+import { handleOnLogin, handleOnLogout } from "../store/auth/thunk"
 import { FormType } from "../types/authForms"
 
 import { useAppDispatch, useAppSelector } from "./useStore"
@@ -23,14 +23,7 @@ export const useAuth = () => {
     }
 
     const onLogout = () => {
-        dispatch(checking())
-
-        setTimeout(() => {
-
-            console.log("Emote")
-
-            dispatch(logout())
-        }, 1500)
+        dispatch(handleOnLogout())
     }
 
     return {

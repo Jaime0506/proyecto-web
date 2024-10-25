@@ -1,11 +1,8 @@
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 
 import { Link } from "react-router-dom";
-import { Button } from "@nextui-org/button";
-import { useAuth } from "../hooks/useAuth";
 
 export default function SideBar() {
-  const { onLogout } = useAuth();
 
   return (
     <Navbar

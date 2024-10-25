@@ -28,3 +28,18 @@ export const handleOnLogin = (user: FormType) => {
         dispatch(login(userLoged))
     }
 }
+
+export const handleOnLogout = () => {
+    return async (dispatch: AppDispatch) => {
+        dispatch(checking())
+
+        const { error } = await supabase.auth.signOut()
+
+        if (error) {
+            console.log(error)
+            dispatch(logout())
+        }
+
+        dispatch(logout())
+    }
+}

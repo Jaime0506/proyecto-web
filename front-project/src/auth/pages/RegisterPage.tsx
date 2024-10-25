@@ -6,9 +6,6 @@ import { Input } from "@nextui-org/input"
 
 import { Link } from "react-router-dom"
 
-import { useAuth } from "../../hooks/useAuth"
-import { userExample } from "../../data/dataExample"
-
 import register_student from '../../assets/register_teacher.svg'
 
 interface FormType {
@@ -19,7 +16,6 @@ interface FormType {
 
 export const RegisterPage = () => {
 
-    const { onLogin } = useAuth()
     const [isVisible, setIsVisible] = useState(false);
     const [formValues, setFormValues] = useState<FormType>({
         email: "",
@@ -29,8 +25,6 @@ export const RegisterPage = () => {
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        onLogin(userExample)
     }
 
     const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {

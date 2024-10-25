@@ -48,7 +48,7 @@ export const Subjects = () => {
           <h3>
             Semestre Actual:
             <span> </span>
-            <span className="underline text-primary">{user.semester}</span>
+            {/* <span className="underline text-primary">{user}</span> */}
           </h3>
         </section>
       </section>

@@ -11,6 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@nextui-org/button";
 import { useAuth } from "../hooks/useAuth";
 
+import accountLogo from '../assets/account.svg'
+
 export default function NavBar() {
   const navigate = useNavigate();
   const { onLogout } = useAuth();
@@ -30,6 +32,14 @@ export default function NavBar() {
         <p className="font-bold font-roboto text-3xl">Canvis</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-3" justify="center">
+        <NavbarItem className="flex flex-col">
+          <Link to={'settings'} className="">
+            <Image 
+              width={35}
+              src={accountLogo}
+            />
+          </Link>
+        </NavbarItem>
         <NavbarItem>
           <Button
             variant="ghost"
