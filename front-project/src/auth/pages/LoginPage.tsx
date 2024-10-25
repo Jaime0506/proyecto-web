@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Button } from "@nextui-org/button"
 import { Image } from "@nextui-org/image"
@@ -7,12 +7,22 @@ import { Input } from "@nextui-org/input"
 import { Link } from "react-router-dom"
 
 import login_student from '../../assets/login_student.svg'
+import { validateEmail, validatePassword } from "../../utils/validationEmail"
 import { useAuth } from "../../hooks/useAuth"
-import { userExample } from "../../data/dataExample"
 
 interface FormType {
     email: string
     password: string
+}
+
+interface errorsType {
+    email: string,
+    password: string
+}
+
+const errorsInit:errorsType = {
+    email: "",
+    password: "",
 }
 
 export const LoginPage = () => {
@@ -23,10 +33,39 @@ export const LoginPage = () => {
         email: "",
         password: ""
     });
+    const [errors, setErrors] = useState(errorsInit);
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        onLogin(userExample)
+
+        let errorTemp:errorsType = {
+            email: '',
+            password: ''
+        };
+
+        // Validate Email
+        const email = validateEmail(formValues.email)
+        const password = validatePassword(formValues.password)
+
+        if (email) {
+            errorTemp = {
+                ...errorTemp,
+                email
+            }
+        }
+
+        if (password) {
+            errorTemp = {
+                ...errorTemp,
+                password
+            }
+        }
+
+        setErrors(errorTemp)
+
+        if (!errorTemp.email && !errorTemp.password) {
+            onLogin(formValues)
+        }
     }
 
     const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +76,10 @@ export const LoginPage = () => {
     }
 
     const toogleVisible = () => setIsVisible(state => !state)
+
+    useEffect(() => {
+        console.log(errors)
+    }, [errors]);
 
     return (
         <section className="flex w-full h-screen grid-cols-2">
@@ -50,6 +93,7 @@ export const LoginPage = () => {
                     <div className="flex flex-col py-10">
                         <form onSubmit={handleOnSubmit}>
                             <Input
+                                autoComplete="."
                                 name="email"
                                 variant="bordered"
                                 radius="none"
@@ -62,8 +106,11 @@ export const LoginPage = () => {
                                 }
                                 onChange={handleOnChangeInput}
                                 value={formValues.email}
+                                errorMessage={errors.email}
+                                isInvalid={!!errors.email}
                             />
                             <Input
+                                autoComplete="."
                                 name="password"
                                 variant="bordered"
                                 radius="none"
@@ -78,13 +125,15 @@ export const LoginPage = () => {
                                 }
                                 onChange={handleOnChangeInput}
                                 value={formValues.password}
+                                errorMessage={errors.password}
+                                isInvalid={!!errors.password}
                             />
 
                             <div className="flex gap-5 py-8">
                                 <Button
                                     type="submit"
                                     radius="none"
-                                    className="bg-primary" 
+                                    className="bg-primary"
                                     style={{
                                         color: "#FFFFFF"
                                     }}

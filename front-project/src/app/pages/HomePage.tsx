@@ -1,22 +1,21 @@
-import { Button } from "@nextui-org/button"
-import { Calendar } from "@nextui-org/calendar"
+import { Link } from "react-router-dom";
+import { useSubjects } from "../../hooks/useSubjects";
+import { CardComponent } from "../../components/CardComponent";
 
 export const HomePage = () => {
-    return (
-        <div className="flex w-full flex-col">
+  const { subjects } = useSubjects();
 
-            Esta es la pagina de inicio insana
-            aca tiene que ir el contenido informativo
+  const renderCards = () => {
+    return subjects?.map((subject, index) => (
+      <Link key={index} to={`/app/student/schedule/${subject.name}`}>
+        <CardComponent subject={subject} />
+      </Link>
+    ));
+  };
 
-            <Button>
-                Ejemplo
-            </Button>
-
-            <div className="flex gap-x-4">
-                eee
-                <Calendar aria-label="Date (No Selection)" />
-                <Calendar color="secondary" aria-label="Date (Uncontrolled)" />
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="flex w-full flex-col">
+      <div className="flex flex-wrap gap-x-4 my-2 mx-20">{renderCards()}</div>
+    </div>
+  );
+};

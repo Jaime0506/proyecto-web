@@ -15,6 +15,7 @@ export interface SubjectType {
     id: string
     name: string
     credits: number
+    image: string
     data_subject: SchedulesType
     available: number
 }
@@ -29,10 +30,8 @@ export interface CareerType {
 
 export interface UserType {
     id: string
-    name: string
+    name: string | null
     email: string
-    semester: number
-    career_id: string
 }
 
 export interface AuthType {

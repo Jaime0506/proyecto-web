@@ -12,6 +12,8 @@
   "dependencies": {
     "@nextui-org/button": "^2.0.38",
     "@nextui-org/calendar": "^2.0.12",
+    "@nextui-org/card": "^2.0.34",
+    "@nextui-org/divider": "^2.0.32",
     "@nextui-org/image": "^2.0.32",
     "@nextui-org/input": "^2.2.5",
     "@nextui-org/link": "^2.0.35",
@@ -21,6 +23,7 @@
     "@nextui-org/table": "^2.0.40",
     "@nextui-org/theme": "^2.2.11",
     "@reduxjs/toolkit": "^2.2.7",
+    "@supabase/supabase-js": "^2.45.5",
     "@types/uuid": "^10.0.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.9.0",

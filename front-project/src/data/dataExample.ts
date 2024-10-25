@@ -19,6 +19,7 @@ export const exampleCareer: CareerType[] = [
                     name: 'Matemáticas Básicas',
                     credits: 5,
                     available: 20,
+                    image:"https://www.ibolivia.net/sites/default/files/2020-07/matematicas_basicas_portada_1.jpg",
                     data_subject: {
                         schedules: [
                             {
@@ -43,6 +44,7 @@ export const exampleCareer: CareerType[] = [
                     id: 'FIS101',
                     name: 'Física I',
                     credits: 4,
+                    image:"https://jrgarciaa.milaulas.com/pluginfile.php/21/course/summary/pagina%20inicial.jpg?time=1566310367939",
                     available: 20,
                     data_subject: {
                         schedules: [
@@ -68,6 +70,7 @@ export const exampleCareer: CareerType[] = [
                     id: 'PROG101',
                     name: 'Introducción a la Programación',
                     credits: 5,
+                    image:"https://concepto.de/wp-content/uploads/2014/08/programacion-2-e1551291144973.jpg",
                     available: 20,
                     data_subject: {
                         schedules: [
@@ -93,6 +96,7 @@ export const exampleCareer: CareerType[] = [
                     id: 'QUI101',
                     name: 'Química General',
                     credits: 4,
+                    image:"https://concepto.de/wp-content/uploads/2014/08/quimica-1-e1589576962905.jpg",
                     available: 20,
                     data_subject: {
                         schedules: [
@@ -118,6 +122,7 @@ export const exampleCareer: CareerType[] = [
                     id: 'INF101',
                     name: 'Introducción a la Informática',
                     credits: 3,
+                    image:"https://ecuador.unir.net/wp-content/uploads/sites/8/2022/06/diverse-office-enthusiastic-white-it-programmer-working-on-desktop-picture-id1354205065.jpg",
                     available: 20,
                     data_subject: {
                         schedules: [
@@ -143,6 +148,7 @@ export const exampleCareer: CareerType[] = [
                     id: 'EDU101',
                     name: 'Educación Física',
                     credits: 2,
+                    image:"https://entreprofesweb.com/wp-content/uploads/2019/09/1515586430.png",
                     available: 20,
                     data_subject: {
                         schedules: [
@@ -173,6 +179,4 @@ export const userExample: UserType = {
     id: uuidv4(),
     email: "ejemplo@gmail.com",
     name: "Pepe",
-    career_id: "CARR123",
-    semester: 1
 }
