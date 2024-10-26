@@ -32,10 +32,28 @@ export interface UserType {
     id: string
     name: string | null
     email: string
+    role: string | undefined
 }
 
 export interface AuthType {
     status: "checking" | "not-authenticated" | "authenticated"
     user: UserType | null
     errorMessage: string | null
+}
+
+export interface SubjectsType {
+    name: string
+    image: string
+    description: string
+}
+
+export interface AttendanceType {
+    user_id: string
+    subject_id: string
+    state: string
+}
+
+export interface DataType {
+    subjects: SubjectsType[] | null
+    attendance: AttendanceType[] | null
 }

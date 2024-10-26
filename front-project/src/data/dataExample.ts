@@ -179,4 +179,5 @@ export const userExample: UserType = {
     id: uuidv4(),
     email: "ejemplo@gmail.com",
     name: "Pepe",
+    role: "role"
 }

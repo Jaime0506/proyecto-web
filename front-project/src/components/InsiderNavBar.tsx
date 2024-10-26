@@ -1,12 +1,10 @@
-import {
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-} from "@nextui-org/navbar";
-
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../hooks";
 
 export default function InsiderNavBar() {
+  const state = useAppSelector((state) => state.auth.user);
+  console.log(state);
   return (
     <Navbar
       maxWidth="2xl"
@@ -22,14 +20,14 @@ export default function InsiderNavBar() {
             Novedades
           </Link>
         </NavbarItem>
-        <NavbarItem className="">
+        { state?.role === "docent" && (<NavbarItem className="">
           <Link
             to={"student"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Asistencia
           </Link>
-        </NavbarItem>
+        </NavbarItem>)}
         <NavbarItem>
           <Link
             to={"student/subjects"}
