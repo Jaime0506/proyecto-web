@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
-import { useSubjects } from "../../hooks/useSubjects";
 import { CardComponent } from "../../components/CardComponent";
+import { useAppSelector } from "../../hooks";
 
 export const HomePage = () => {
-  const { subjects } = useSubjects();
+
+  const state = useAppSelector((state) => state.data.subjects);
 
   const renderCards = () => {
-    return subjects?.map((subject, index) => (
+    return state?.map((subject, index) => (
       <Link key={index} to={`/app/student/schedule/${subject.name}`}>
         <CardComponent subject={subject} />
       </Link>

@@ -4,7 +4,6 @@ import { useAppSelector } from "../hooks";
 
 export default function InsiderNavBar() {
   const state = useAppSelector((state) => state.auth.user);
-  console.log(state);
   return (
     <Navbar
       maxWidth="2xl"

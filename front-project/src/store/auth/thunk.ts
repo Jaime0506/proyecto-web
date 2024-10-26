@@ -2,16 +2,19 @@ import { supabase } from "../../supabase/supabase";
 import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout } from "./authSlice";
+import { subjects } from "../data/dataSlice";
 
 export const handleOnLogin = (user: FormType) => {
   return async (dispatch: AppDispatch) => {
     dispatch(checking());
     
     const { data, error } = await supabase.auth.signInWithPassword(user);
-    // const { data: tableData, error: tableError } = await supabase.schema('gr7').from('subjects').select('*')
+    // console.log(data);
+
+    const { data: tableData } = await supabase.schema('gr7').from('subjects').select()
     // console.log(tableData, tableError)
     
-    console.log(data);
+    dispatch(subjects(tableData))
 
     if (error) {
       console.log(error);
