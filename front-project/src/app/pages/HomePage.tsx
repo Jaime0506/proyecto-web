@@ -15,7 +15,7 @@ export const HomePage = () => {
     return state?.map((subject, index) => (
       <Link
         key={index}
-        to={`/app/student/schedule/${subject.name}`}
+        to={`/app/board/news`}
         onClick={() => {
           handleOnClick(subject);
         }}

@@ -1,9 +1,9 @@
 import { Navigate, RouteObject } from "react-router-dom";
 import { ValidationRoutes } from "../components/ValidationRoutes";
 import { HomePage } from "./pages/HomePage";
-import { Schedule, Subjects } from "./pages/estudent";
-import { Example } from "./pages/docent/Example";
+import { Board, Subjects } from "./pages/estudent";
 import { SettingsPage } from "./pages/SettingsPage";
+import { News, Tasks, Attendance, InfoTask, AttendanceCall, TaskDelivery, FeedBack } from "./pages/components";
 
 const validation = (status: string):boolean => {
     if (status === "authenticated") return true
@@ -24,34 +24,48 @@ export const AppRoutes: RouteObject = {
             element: <HomePage />
         },
         {
-            path: 'docent',
-            element: <Example />
-        },
-        {
             path: 'settings',
             element: <SettingsPage />
         },
         {
-            path: 'student',
+            path: 'board',
+            element:<Board />,
             children: [
                 {
-                    path: '',
-                    element: <Navigate to={'schedule'} />
-                },{
-                    path: 'schedule',
-                    element: <Schedule />
+                    path: 'news',
+                    element: <News />
                 },
                 {
-                    path: 'schedule/:subject',
-                    element: <Schedule />
+                    path: 'tasks',
+                    element: <Tasks />
                 },
                 {
-                    path: 'subjects',
+                    path: 'attendance',
+                    element: <Attendance />
+                },
+                {
+                    path: 'infoTask',
+                    element: <InfoTask />
+                },
+                {
+                    path: 'attendanceCall',
+                    element: <AttendanceCall />
+                },
+                {
+                    path: 'taskDelivery',
+                    element: <TaskDelivery />
+                },
+                {
+                    path: 'feedback',
+                    element: <FeedBack />
+                },
+                {
+                    path: 'subjectsExample',
                     element: <Subjects />
                 },
                 {
                     path: '*',
-                    element: <Navigate to={'schedule'} />
+                    element: <Navigate to={'board'} />
                 }
             ]
         }

@@ -1,2 +1,2 @@
-export * from './Schedule'
+export * from './Board'
 export * from './Subjects'

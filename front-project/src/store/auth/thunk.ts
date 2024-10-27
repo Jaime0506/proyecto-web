@@ -12,7 +12,6 @@ export const handleOnCheckingCurrentUser = () => {
         const { data } = await supabase.auth.getUser()
 
         const { data: tableData } = await supabase.schema('gr7').from('subjects').select()
-    
 
         dispatch(subjects(tableData))
 

@@ -20,7 +20,7 @@ export default function SideBar() {
         </NavbarItem>
         <NavbarItem className="mb-2">
           <Link
-            to={"student"}
+            to={"board"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Asignatura 1
@@ -28,7 +28,7 @@ export default function SideBar() {
         </NavbarItem>
         <NavbarItem className="mb-2">
           <Link
-            to={"student/subjects"}
+            to={"board/subjectsExample"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Asignatura 2
