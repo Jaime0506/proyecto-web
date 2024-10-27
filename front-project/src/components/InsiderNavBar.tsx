@@ -13,7 +13,7 @@ export default function InsiderNavBar() {
       <NavbarContent className="hidden sm:flex gap-3" justify="center">
         <NavbarItem className="">
           <Link
-            to={"docent"}
+            to={"news"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Novedades
@@ -21,7 +21,7 @@ export default function InsiderNavBar() {
         </NavbarItem>
         { state?.role === "docent" && (<NavbarItem className="">
           <Link
-            to={"student"}
+            to={"attendance"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Asistencia
@@ -29,7 +29,7 @@ export default function InsiderNavBar() {
         </NavbarItem>)}
         <NavbarItem>
           <Link
-            to={"student/subjects"}
+            to={"tasks"}
             className="text-black text-lg hover:bg-primary p-3 rounded hover:text-white transition-all"
           >
             Tareas
