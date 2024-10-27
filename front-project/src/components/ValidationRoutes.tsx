@@ -21,7 +21,6 @@ export const ValidationRoutes = ({ redirectTo, validation,type, }: ValidationRou
         <div>
           <NavBar />
 
-
           <div className="flex flex-row">
             <SideBar />
             <Outlet />

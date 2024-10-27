@@ -31,7 +31,7 @@ export interface CareerType {
 export interface UserType {
     id: string
     name: string | null
-    email: string
+    email: string | undefined
     role: string | undefined
 }
 

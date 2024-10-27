@@ -8,6 +8,7 @@ import { Link } from "react-router-dom"
 
 import register_student from '../../assets/register_teacher.svg'
 import { validateEmail, validatePassword } from "../../utils/validationEmail"
+import { useAuth } from "../../hooks/useAuth"
 
 interface FormType {
     email: string
@@ -26,6 +27,7 @@ const errorsInit: errorsType = {
 }
 
 export const RegisterPage = () => {
+    const { onRegister } = useAuth()
 
     const [errors, setErrors] = useState(errorsInit);
     const [isVisible, setIsVisible] = useState(false);
@@ -63,7 +65,7 @@ export const RegisterPage = () => {
         setErrors(errorTemp)
 
         if (!errorTemp.email && !errorTemp.password) {
-            console.log(formValues)
+            onRegister(formValues)
         }
     }
 
