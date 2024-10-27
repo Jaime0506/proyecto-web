@@ -57,4 +57,5 @@ export interface AttendanceType {
 export interface DataType {
     subjects: SubjectsType[] | null
     attendance: AttendanceType[] | null
+    currentSubject: SubjectsType | null
 }

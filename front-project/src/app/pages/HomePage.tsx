@@ -1,14 +1,25 @@
 import { Link } from "react-router-dom";
 import { CardComponent } from "../../components/CardComponent";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { currentSubject } from "../../store/data/dataSlice";
 
 export const HomePage = () => {
-
   const state = useAppSelector((state) => state.data.subjects);
+  const dispatch = useAppDispatch();
+
+  const handleOnClick = (selectedSubject: any) => {
+    dispatch(currentSubject(selectedSubject));
+  };
 
   const renderCards = () => {
     return state?.map((subject, index) => (
-      <Link key={index} to={`/app/student/schedule/${subject.name}`}>
+      <Link
+        key={index}
+        to={`/app/student/schedule/${subject.name}`}
+        onClick={() => {
+          handleOnClick(subject);
+        }}
+      >
         <CardComponent subject={subject} />
       </Link>
     ));

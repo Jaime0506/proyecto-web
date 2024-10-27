@@ -42,7 +42,7 @@ export const AppRoutes: RouteObject = {
                     element: <Schedule />
                 },
                 {
-                    path: 'schedule/:asignatura',
+                    path: 'schedule/:subject',
                     element: <Schedule />
                 },
                 {

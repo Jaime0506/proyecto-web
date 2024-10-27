@@ -11,6 +11,11 @@ export const handleOnCheckingCurrentUser = () => {
 
         const { data } = await supabase.auth.getUser()
 
+        const { data: tableData } = await supabase.schema('gr7').from('subjects').select()
+    
+
+        dispatch(subjects(tableData))
+
         if (!data.user) {
             dispatch(logout())
 
@@ -33,14 +38,7 @@ export const handleOnLogin = (user: FormType) => {
         dispatch(checking());
 
         const { data, error } = await supabase.auth.signInWithPassword(user);
-        // console.log(data);
-
-        const { data: tableData } = await supabase.from('subjects').select()
-        // console.log(tableData, tableError)
-
-        dispatch(subjects(tableData))
         
-
         if (error) {
             console.log(error);
             dispatch(logout());
