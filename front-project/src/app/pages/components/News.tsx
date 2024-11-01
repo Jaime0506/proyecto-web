@@ -17,7 +17,10 @@ export const News = () => {
         width={1490}
       />
     </Card>
-    <p>{state?.description}</p>
+    <div 
+        dangerouslySetInnerHTML={{ __html: state?.description || "" }} 
+        className="text-lg mt-4"
+      />
     </>
   );
 };
