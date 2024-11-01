@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { CareerType, SubjectType } from "../../src/types/redux";
 import { exampleCareer } from "../data/dataExample";
 import { useAuth } from "./useAuth";

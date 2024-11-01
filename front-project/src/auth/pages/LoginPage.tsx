@@ -45,7 +45,7 @@ export const LoginPage = () => {
 
         // Validate Email
         const email = validateEmail(formValues.email)
-        const password = validatePassword(formValues.password)
+        const password = validatePassword(formValues.password, "login")
 
         if (email) {
             errorTemp = {

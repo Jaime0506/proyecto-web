@@ -1,5 +1,4 @@
-import { checking } from "../store/auth/authSlice"
-import { handleOnLogin, handleOnLogout } from "../store/auth/thunk"
+import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister } from "../store/auth/thunk"
 import { FormType } from "../types/authForms"
 
 import { useAppDispatch, useAppSelector } from "./useStore"
@@ -9,17 +8,16 @@ export const useAuth = () => {
     const { user } = useAppSelector(state => state.auth)
     const dispatch = useAppDispatch()
 
-    const onCheckin = () => {
-        dispatch(checking())
-        
-        // Validation if the user is authenticated
-        setTimeout(() => {
-            // dispatch()
-        }, 1000)
+    const onCheckingCurrentUser = () => {
+        dispatch(handleOnCheckingCurrentUser())
     }
     
     const onLogin = (user: FormType) => {
         dispatch(handleOnLogin(user))
+    }
+
+    const onRegister = (user: FormType) => {
+        dispatch(handleOnRegister(user))
     }
 
     const onLogout = () => {
@@ -30,7 +28,8 @@ export const useAuth = () => {
         user,
 
         onLogin,
+        onRegister,
         onLogout,
-        onCheckin
+        onCheckingCurrentUser
     }
 }

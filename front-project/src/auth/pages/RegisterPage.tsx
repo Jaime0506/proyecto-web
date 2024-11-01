@@ -7,6 +7,8 @@ import { Input } from "@nextui-org/input"
 import { Link } from "react-router-dom"
 
 import register_student from '../../assets/register_teacher.svg'
+import { validateEmail, validatePassword } from "../../utils/validationEmail"
+import { useAuth } from "../../hooks/useAuth"
 
 interface FormType {
     email: string
@@ -14,8 +16,20 @@ interface FormType {
     rPassword: string
 }
 
-export const RegisterPage = () => {
+interface errorsType {
+    email: string
+    password: string
+}
 
+const errorsInit: errorsType = {
+    email: "",
+    password: ""
+}
+
+export const RegisterPage = () => {
+    const { onRegister } = useAuth()
+
+    const [errors, setErrors] = useState(errorsInit);
     const [isVisible, setIsVisible] = useState(false);
     const [formValues, setFormValues] = useState<FormType>({
         email: "",
@@ -25,6 +39,34 @@ export const RegisterPage = () => {
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        let errorTemp:errorsType = {
+            email: '',
+            password: ''
+        }
+
+        const email = validateEmail(formValues.email)
+        const password = validatePassword(formValues.password, "register", formValues.rPassword)
+
+        if (email) {
+            errorTemp = {
+                ...errorTemp,
+                email
+            }
+        }
+
+        if (password) {
+            errorTemp = {
+                ...errorTemp,
+                password
+            }
+        }
+
+        setErrors(errorTemp)
+
+        if (!errorTemp.email && !errorTemp.password) {
+            onRegister(formValues)
+        }
     }
 
     const handleOnChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +83,6 @@ export const RegisterPage = () => {
             <div className="flex-1 flex items-center justify-center bg-primary">
                 <div className="flex flex-col items-center justify-center w-3/5">
                     <Image
-                        // width={'50%'}
                         src={register_student}
                     />
                 </div>
@@ -57,11 +98,11 @@ export const RegisterPage = () => {
                     <div className="flex flex-col py-10">
                         <form onSubmit={handleOnSubmit}>
                             <Input
+                                autoComplete="."
                                 name="email"
                                 variant="bordered"
                                 radius="none"
                                 label="Correo electronico"
-                                type="email"
                                 endContent={
                                     <div className="h-full flex items-center">
                                         <i className="fa-solid fa-envelope"></i>
@@ -69,8 +110,11 @@ export const RegisterPage = () => {
                                 }
                                 onChange={handleOnChangeInput}
                                 value={formValues.email}
+                                isInvalid={!!errors.email}
+                                errorMessage={errors.email}
                             />
                             <Input
+                                autoCapitalize="."
                                 name="password"
                                 variant="bordered"
                                 radius="none"
@@ -87,6 +131,7 @@ export const RegisterPage = () => {
                                 value={formValues.password}
                             />
                             <Input
+                                autoCapitalize="."
                                 name="rPassword"
                                 variant="bordered"
                                 radius="none"
@@ -94,6 +139,8 @@ export const RegisterPage = () => {
                                 type={isVisible ? "text" : "password"}
                                 onChange={handleOnChangeInput}
                                 value={formValues.rPassword}
+                                isInvalid={!!errors.password}
+                                errorMessage={errors.password}
                             />
 
                             <Link to={'/auth/login'}>

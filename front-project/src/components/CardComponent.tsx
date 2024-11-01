@@ -1,10 +1,10 @@
 import { Card, CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
-import { SubjectType } from "../types/redux";
+import { SubjectsType } from "../types/redux";
 
 interface CardComponentProps {
-  subject: SubjectType;
+  subject: SubjectsType;
 }
 
 export const CardComponent = ({ subject }: CardComponentProps) => {

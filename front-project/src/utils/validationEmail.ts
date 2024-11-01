@@ -11,7 +11,7 @@ export const checkEmail = (email: string) => {
 }
 
 export const validateEmail = (email: string) => {
-    
+
     if (!email) {
         return "El correo no puede estar vacio"
     }
@@ -23,10 +23,21 @@ export const validateEmail = (email: string) => {
     return false
 }
 
-export const validatePassword = (password: string) => {
+export const validatePassword = (password: string, type: "login" | "register", rPassword?: string) => {
+    if (type === "login") {
+        if (!(password.length > 6)) {
+            return "La contraseña debe tener mas de 6 caracteres"
+        }
+    }
 
-    if (!(password.length > 6)) {
-        return "La contraseña debe tener mas de 6 caracteres"
+    if (type === "register") {
+        if (!(password.length > 6)) {
+            return "Las contraseñas debe tener mas de 6 caracteres"
+        }
+
+        if (!(password === rPassword)) {
+            return "Las contraseñas no coinciden"
+        }
     }
 
     return false

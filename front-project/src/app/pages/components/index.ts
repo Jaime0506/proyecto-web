@@ -1,0 +1,7 @@
+export * from './News'
+export * from './Tasks'
+export * from './Attendace'
+export * from './InfoTask'
+export * from './AttendanceCall'
+export * from './TaskDelivery'
+export * from './Feedback'
