@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { uploadFile } from '../../utils/upload-files';
+import { useState } from 'react';
+import { uploadFile } from '../../utils/uploadFiles';
+import { useAuth } from '../../hooks/useAuth';
 
 export const SettingsPage = () => {
+    const { user } = useAuth()
+
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState("/src/assets/profile1.jpg"); // Imagen por defecto
     const [tempImage, setTempImage] = useState<string | null>(null); // Estado para la imagen temporal
@@ -18,7 +21,7 @@ export const SettingsPage = () => {
 
     const handleConfirm = async () => {
         if (selectedFile) {
-            const publicUrl = await uploadFile(selectedFile, "user-id-placeholder"); // Reemplaza con el ID real del usuario
+            const publicUrl = await uploadFile(selectedFile, user?.id); // Reemplaza con el ID real del usuario
             if (publicUrl) {
                 console.log("URL de imagen pública:", publicUrl);
                 setProfileImage(publicUrl); // Actualiza el estado con la URL pública
