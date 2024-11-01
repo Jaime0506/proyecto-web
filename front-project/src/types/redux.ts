@@ -41,17 +41,26 @@ export interface AuthType {
     errorMessage: string | null
 }
 
+
 export interface SubjectsType {
     subject_id: string
     name: string
     image: string
     description: string
+    sessions: number
 }
 
+
 export interface AttendanceType {
+    attendance_id: string
     user_id: string
     subject_id: string
-    state: string
+    metadata: MetadataType[]
+}
+
+export interface MetadataType {
+    date: string
+    status: string
 }
 
 export interface DataType {

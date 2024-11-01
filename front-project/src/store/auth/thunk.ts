@@ -8,12 +8,12 @@ import { UserType } from "../../types/redux";
 export const handleOnCheckingCurrentUser = () => {
     return async (dispatch: AppDispatch) => {
         dispatch(checking())
+        
+        const { data } = await supabase.auth.getUser();
 
-        const { data } = await supabase.auth.getUser()
-
-        const { data: tableData } = await supabase.schema('gr7').from('subjects').select()
-
-        dispatch(subjects(tableData))
+        const { data: tableData } = await supabase.schema('gr7').from('subjects').select();
+        
+        dispatch(subjects(tableData));
 
         if (!data.user) {
             dispatch(logout())

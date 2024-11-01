@@ -6,7 +6,7 @@ export const Board = () => {
   return (
     <div className="flex w-full flex-col">
       <InsiderNavBar />
-      <div className="flex gap-x-4 m-4">
+      <div className="flex flex-col gap-x-4 m-4">
         <Outlet />
       </div>
     </div>
