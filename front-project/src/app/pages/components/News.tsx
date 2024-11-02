@@ -4,6 +4,7 @@ import { useAppSelector } from "../../../hooks";
 
 export const News = () => {
   const state = useAppSelector((state) => state.data.currentSubject);
+  console.log(state)
   return (<>
     <Card className="h-[250px]">
       <CardHeader className="absolute z-10 top-36 flex-col !items-start">

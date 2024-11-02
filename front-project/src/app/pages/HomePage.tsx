@@ -2,12 +2,13 @@ import { Link } from "react-router-dom";
 import { CardComponent } from "../../components/CardComponent";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { currentSubject } from "../../store/data/dataSlice";
+import { SubjectsType } from "../../types/redux";
 
 export const HomePage = () => {
   const state = useAppSelector((state) => state.data.subjects);
   const dispatch = useAppDispatch();
 
-  const handleOnClick = (selectedSubject: any) => {
+  const handleOnClick = (selectedSubject: SubjectsType) => {
     dispatch(currentSubject(selectedSubject));
   };
 

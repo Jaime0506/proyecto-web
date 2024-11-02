@@ -11,9 +11,19 @@ export const handleOnCheckingCurrentUser = () => {
         
         const { data } = await supabase.auth.getUser();
 
-        const { data: tableData } = await supabase.schema('gr7').from('subjects').select();
-        
-        dispatch(subjects(tableData));
+        // const { data: tableAttendance, error: errorAttendance } = await supabase
+        // .schema('public')
+        // .from('tabla_prueba')
+        // .select()
+        // .contains('metadata', [{"date":"data1"}])
+        // console.log(tableAttendance, errorAttendance)
+
+        const { data: tableSubjects, error } = await supabase
+        .schema('gr7')
+        .from('subjects')
+        .select();
+        console.log(tableSubjects, error);
+        dispatch(subjects(tableSubjects));
 
         if (!data.user) {
             dispatch(logout())
@@ -25,9 +35,9 @@ export const handleOnCheckingCurrentUser = () => {
             id: data.user.id,
             name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
             email: data.user.email,
-            role: data.user.role,
+            role: data.user.user_metadata.role,
         };
-
+        console.log(data)
         dispatch(login(userLoged))
     }
 }
@@ -49,7 +59,7 @@ export const handleOnLogin = (user: FormType) => {
             id: data.user.id,
             name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
             email: user.email,
-            role: data.user.role,
+            role: data.user.user_metadata.role,
         };
 
 
@@ -79,7 +89,7 @@ export const handleOnRegister = (user: FormType) => {
             id: data.user.id,
             name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
             email: user.email,
-            role: data.user.role,
+            role: data.user.user_metadata.role,
         };
 
         dispatch(login(userLoged))
