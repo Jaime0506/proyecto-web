@@ -11,12 +11,12 @@ export const handleOnCheckingCurrentUser = () => {
         
         const { data } = await supabase.auth.getUser();
 
-        // const { data: tableAttendance, error: errorAttendance } = await supabase
-        // .schema('public')
-        // .from('tabla_prueba')
-        // .select()
-        // .contains('metadata', [{"date":"data1"}])
-        // console.log(tableAttendance, errorAttendance)
+        const { data: tableAttendance, error: errorAttendance } = await supabase
+        .schema('gr7')
+        .from('attendance')
+        .select()
+        .contains('metadata', [{"date":"00/00/00"}])
+        console.log(tableAttendance, errorAttendance)
 
         const { data: tableSubjects, error } = await supabase
         .schema('gr7')

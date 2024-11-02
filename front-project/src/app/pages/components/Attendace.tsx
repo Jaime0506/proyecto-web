@@ -6,11 +6,8 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { RadioGroup, Radio } from "@nextui-org/radio";
 
 export const Attendance = () => {
-
-  const colors = ["default", "primary", "secondary", "success", "warning", "danger"] as const;
 
   return (
     <div className="flex flex-col gap-3">
