@@ -2,21 +2,28 @@ import { supabase } from "../../supabase/supabase";
 import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout } from "./authSlice";
-import { subjects } from "../data/dataSlice";
+import { attendance, subjects } from "../data/dataSlice";
 import { UserType } from "../../types/redux";
+
+export const handleOnGetAttendance = (subject_id: string) => {
+    return async (dispatch: AppDispatch) => {
+
+        const { data, error } = await supabase
+        .schema('gr7')
+        .from('attendance')
+        .select()
+        .eq('subject_id', subject_id);
+        console.log(data, error);
+
+        dispatch(attendance(data));
+    }
+}
 
 export const handleOnCheckingCurrentUser = () => {
     return async (dispatch: AppDispatch) => {
         dispatch(checking())
         
         const { data } = await supabase.auth.getUser();
-
-        const { data: tableAttendance, error: errorAttendance } = await supabase
-        .schema('gr7')
-        .from('attendance')
-        .select()
-        .contains('metadata', [{"date":"00/00/00"}])
-        console.log(tableAttendance, errorAttendance)
 
         const { data: tableSubjects, error } = await supabase
         .schema('gr7')
@@ -37,7 +44,7 @@ export const handleOnCheckingCurrentUser = () => {
             email: data.user.email,
             role: data.user.user_metadata.role,
         };
-        console.log(data)
+
         dispatch(login(userLoged))
     }
 }

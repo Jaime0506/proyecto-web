@@ -3,6 +3,7 @@ import { CardComponent } from "../../components/CardComponent";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { currentSubject } from "../../store/data/dataSlice";
 import { SubjectsType } from "../../types/redux";
+import { handleOnGetAttendance } from "../../store/auth/thunk";
 
 export const HomePage = () => {
   const state = useAppSelector((state) => state.data.subjects);
@@ -10,6 +11,7 @@ export const HomePage = () => {
 
   const handleOnClick = (selectedSubject: SubjectsType) => {
     dispatch(currentSubject(selectedSubject));
+    dispatch(handleOnGetAttendance(selectedSubject.subject_id));
   };
 
   const renderCards = () => {

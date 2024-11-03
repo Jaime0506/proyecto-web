@@ -1,50 +1,16 @@
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../hooks";
 
 export const Attendance = () => {
+  const state = useAppSelector((state) => state.data.currentSubject);
 
-  return (
-    <div className="flex flex-col gap-3">
-      <Table
-        color={"success"}
-        selectionMode="multiple"
-        aria-label="Example static collection table"
-      >
-        <TableHeader>
-          <TableColumn>NAME</TableColumn>
-          <TableColumn>ROLE</TableColumn>
-          <TableColumn>STATUS</TableColumn>
-        </TableHeader>
-        <TableBody>
-          <TableRow key="1">
-            <TableCell>Tony Reichert</TableCell>
-            <TableCell>CEO</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="2">
-            <TableCell>Zoey Lang</TableCell>
-            <TableCell>Technical Lead</TableCell>
-            <TableCell>Paused</TableCell>
-          </TableRow>
-          <TableRow key="3">
-            <TableCell>Jane Fisher</TableCell>
-            <TableCell>Senior Developer</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="4">
-            <TableCell>William Howard</TableCell>
-            <TableCell>Community Manager</TableCell>
-            <TableCell>Vacation</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      
-    </div>
-  );
+  const renderRows = () => {
+    return state?.sessions.map((session, index) => (
+      <Link key={index} to={`/app/board/attendanceCall`} state={{session}}>
+        <p>Asistencia del {session.date}</p>
+      </Link>
+    ));
+  };
+
+  return <div>{renderRows()}</div>;
 };

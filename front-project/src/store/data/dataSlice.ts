@@ -12,8 +12,8 @@ export const dataSlice = createSlice({
     name: 'data',
     initialState: initialState,
     reducers: {
-        attendance: (state, action: PayloadAction<AttendanceType[]>) => {
-            state.attendance = {...action.payload}
+        attendance: (state, action: PayloadAction<AttendanceType[] | null>) => {
+            state.attendance = action?.payload ? [...action.payload] : null
         },
         subjects: (state, action: PayloadAction<SubjectsType[] | null>) => {
             state.subjects = action?.payload ? [...action.payload] : null // [] para array {} para objeto
