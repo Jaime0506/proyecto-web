@@ -2,6 +2,7 @@ import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { Link } from "react-router-dom";
 import { currentSubject } from "../store/data/dataSlice";
+import { handleOnGetAttendance } from "../store/auth/thunk";
 
 export default function SideBar() {
   const state = useAppSelector((state) => state.data.subjects);
@@ -9,6 +10,7 @@ export default function SideBar() {
 
   const handleOnClick = (selectedSubject: any) => {
     dispatch(currentSubject(selectedSubject));
+    dispatch(handleOnGetAttendance(selectedSubject.subject_id));
   };
 
   const renderSubjects = () =>
