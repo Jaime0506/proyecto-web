@@ -19,7 +19,7 @@ export const handleOnGetAttendance = (subject_id: string) => {
     const { data: funcData, error: funcError } = await supabase.schema("gr7").rpc(
         "update_attendance",
         {
-          p_subject_id: "2ab20c49-574a-4965-91de-5eb91518575c",
+          p_subject_id: "6a4d43dc-d4b0-4ebc-94e9-a6bee2394cac",
           p_user_id: "09cb613a-71df-4620-b067-edafb833fab9",
         }
       );
