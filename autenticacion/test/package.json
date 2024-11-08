@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Running test script\"",
-    "cypress:open": "cypress open"
+    "dev": "cypress open"
   },
   "keywords": [
     "Testing"
