@@ -1,7 +1,7 @@
 
 // jhon
 describe('Login Test', () => {
-    it('should log in with valid credentials and then log out', () => {
+    it('Debe iniciar sesión con credenciales válidas y luego cerrar sesión.', () => {
       // Visitar la página de inicio
       cy.visit('http://localhost:5173');
       // Rellenar los campos de inicio de sesión
