@@ -8,10 +8,10 @@ describe('Login Test', () => {
     cy.visit('http://localhost:5173')
     
     // Encuentra el campo de entrada de correo electrónico y escribe un email válido para el inicio de sesión
-    cy.get('input[name="email"]').type('prueba1@gmail.com')
+    cy.get('input[name="email"]').type('prueba70@gmail.com')
     
     // Encuentra el campo de entrada de contraseña y escribe una contraseña válida
-    cy.get('input[name="password"]').type('prueba1')
+    cy.get('input[name="password"]').type('prueba70')
     
     // Encuentra el botón de envío del formulario (para iniciar sesión) y haz clic en él
     cy.get('button[type="submit"]').click()
