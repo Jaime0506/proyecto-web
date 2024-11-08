@@ -9,13 +9,13 @@ describe('User Registration Test', () => {
     cy.contains('Registrate').click()
     
     // Encuentra el campo de entrada de correo electrónico y escribe un email de prueba
-    cy.get('input[name="email"]').type('prueba1@gmail.com')
+    cy.get('input[name="email"]').type('prueba70@gmail.com')
     
     // Encuentra el campo de entrada de contraseña y escribe una contraseña de prueba
-    cy.get('input[name="password"]').type('prueba1')
+    cy.get('input[name="password"]').type('prueba70')
     
     // Encuentra el campo de confirmación de contraseña y escribe la misma contraseña
-    cy.get('input[name="rPassword"]').type('prueba1')
+    cy.get('input[name="rPassword"]').type('prueba70')
     
     // Busca y hace clic nuevamente en el botón de 'Registrate' para enviar el formulario
     cy.contains('Registrate').click()
