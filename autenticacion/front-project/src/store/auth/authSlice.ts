@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { AuthType, UserType } from '../../types/redux';
+import type { AuthType, CustomError, UserType } from '../../types/redux';
 import type { AuthError } from '@supabase/supabase-js';
 
 const initialState: AuthType = {
@@ -25,13 +25,13 @@ export const authSlice = createSlice({
             state.error = null
         },
 
-        logout: (state, action: PayloadAction<AuthError>) => {
+        logout: (state, action: PayloadAction<AuthError | null >) => {
             state.status = "not-authenticated"
             state.user = null
             state.error = action.payload
         },
 
-        setError: (state, action: PayloadAction<AuthError>) => {
+        setError: (state, action: PayloadAction<AuthError | null | CustomError >) => {
             state.error = action.payload
         },
 

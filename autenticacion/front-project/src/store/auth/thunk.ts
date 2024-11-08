@@ -5,7 +5,7 @@ import { checking, login, logout, setError } from "./authSlice";
 import { attendance, subjects } from "../data/dataSlice";
 import { UserType } from "../../types/redux";
 import { uploadFile } from "../../utils/uploadFiles";
-import { AuthError } from "@supabase/supabase-js";
+
 
 export const handleOnGetAttendance = (subject_id: string) => {
     return async (dispatch: AppDispatch) => {
@@ -165,12 +165,11 @@ export const handleOnSetName = (name: string) => {
 }
 
 export const handleOnUploadPhoto = (file: File, user: UserType) => {
-    return async (dispatch) => {
+    return async (dispatch: AppDispatch) => {
         const resposne = await uploadFile(file, user?.id); 
 
-        const errorMod = {...resposne?.error}
+        //const errorMod = {...resposne?.error}
 
-        
         
 
         if (resposne?.error) {
