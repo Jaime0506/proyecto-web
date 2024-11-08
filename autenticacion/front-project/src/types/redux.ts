@@ -1,4 +1,5 @@
-import { Dayjs } from 'dayjs'
+import type { AuthError } from '@supabase/supabase-js'
+import type { Dayjs } from 'dayjs'
 
 export interface ScheduleItemType {
     day: number // Usualmente un número de 0 (domingo) a 6 (sábado)
@@ -38,7 +39,7 @@ export interface UserType {
 export interface AuthType {
     status: "checking" | "not-authenticated" | "authenticated"
     user: UserType | null
-    errorMessage: string | null
+    error: AuthError | null
 }
 
 export interface SessionType {

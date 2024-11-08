@@ -41,7 +41,7 @@ export const handleOnCheckingCurrentUser = () => {
     dispatch(subjects(tableSubjects));
 
     if (!data.user) {
-      dispatch(logout());
+      dispatch(logout(null));
 
       return;
     }
@@ -65,7 +65,7 @@ export const handleOnLogin = (user: FormType) => {
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
@@ -92,7 +92,7 @@ export const handleOnRegister = (user: FormType) => {
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
@@ -118,11 +118,11 @@ export const handleOnLogout = () => {
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
 
-    dispatch(logout());
+    dispatch(logout(null));
   };
 };
