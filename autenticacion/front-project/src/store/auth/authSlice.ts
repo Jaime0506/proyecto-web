@@ -25,16 +25,20 @@ export const authSlice = createSlice({
             state.error = null
         },
 
-        logout: (state, action: PayloadAction<AuthError | null>) => {
+        logout: (state, action: PayloadAction<AuthError>) => {
             state.status = "not-authenticated"
             state.user = null
             state.error = action.payload
         },
 
-        error: (state, action: PayloadAction<AuthError>) => {
+        setError: (state, action: PayloadAction<AuthError>) => {
             state.error = action.payload
+        },
+
+        name: (state, action: PayloadAction<string> ) => {
+            state.user!.name = action.payload
         }
     },
 });
 
-export const { checking, login, logout, error } = authSlice.actions;
+export const { checking, login, logout, setError } = authSlice.actions;

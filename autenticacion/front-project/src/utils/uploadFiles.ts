@@ -9,16 +9,23 @@ export const uploadFile = async (file: File, uid: string | undefined) => {
     const { data, error } = await supabase.storage.from("pictures").upload(`${uid}/photo/${uuidv4()}`, file);
 
     if (error) {
-        console.log("Ha ocurrido un errro", error);
-        return "";
+        return {
+            publicURL: null,
+            error
+        };
     }
 
-    console.log(data)
+    const { data: publicURL } = supabase.storage.from("Picture_Profile").getPublicUrl(data.path);
 
-    // const { data:publicURL } = supabase.storage.from("Picture_Profile").getPublicUrl(data.path);
+    if (publicURL) {
+        return {
+            publicURL: publicURL.publicUrl,
+            error: null
+        }
+    }
 
-    // if(publicURL){
-    //     return publicURL.publicUrl;
-    // }
-    // return "";
+    return {
+        publicURL: null,
+        error
+    }
 };

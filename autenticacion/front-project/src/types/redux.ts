@@ -34,6 +34,7 @@ export interface UserType {
     name: string | null
     email: string | undefined
     role: string | undefined
+    photoURL: string | null
 }
 
 export interface AuthType {
