@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Panel de Administración</h2>
+
+    <!-- Formulario para asignar profesores a salones -->
+    <div class="dashboard-card">
+        <div class="card-content">
+            <h3 class="section-title">Asignar Profesores a Salones</h3>
+            <form method="POST" action="{{ url_for('asignar_profesor') }}" class="assignment-form">
+                <div class="form-group">
+                    <label for="profesor_id">Profesor</label>
+                    <select id="profesor_id" name="profesor_id" required>
+                        {% for profesor in profesores %}
+                        <option value="{{ profesor.id }}">{{ profesor.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salon_id">Salón</label>
+                    <select id="salon_id" name="salon_id" required>
+                        {% for salon in salones %}
+                        <option value="{{ salon.id }}">{{ salon.nombre }} (Capacidad: {{ salon.capacidad }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_inicio">Fecha y hora de inicio</label>
+                    <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_fin">Fecha y hora de fin</label>
+                    <input type="datetime-local" id="fecha_fin" name="fecha_fin" required>
+                </div>
+                <button type="submit" class="submit-btn">Asignar Profesor</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulario para asignar estudiantes a salones -->
+    <div class="dashboard-card">
+        <div class="card-content">
+            <h3 class="section-title">Asignar Estudiantes a Salones</h3>
+            <form method="POST" action="{{ url_for('asignar_estudiante') }}">
+                <div class="form-group">
+                    <label for="estudiante_id">Estudiante</label>
+                    <select id="estudiante_id" name="estudiante_id" required>
+                        {% for estudiante in estudiantes %}
+                        <option value="{{ estudiante.id }}">{{ estudiante.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="asignacion_id">Asignación</label>
+                    <select id="asignacion_id" name="asignacion_id" required>
+                        {% for asignacion in asignaciones %}
+                        <option value="{{ asignacion.id }}">{{ asignacion.salon.nombre }} - {{ asignacion.profesor.username }} ({{ asignacion.fecha_inicio }} - {{ asignacion.fecha_fin }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Asignar Estudiante</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de asignaciones actuales -->
+    <div class="dashboard-card">
+        <div class="card-content">
+            <h3 class="section-title">Asignaciones Actuales</h3>
+            <div class="table-container">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Salón</th>
+                            <th>Profesor</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de fin</th>
+                            <th>Estudiantes asignados</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asignacion in asignaciones %}
+                        <tr>
+                            <td>{{ asignacion.salon.nombre }}</td>
+                            <td>{{ asignacion.profesor.username }}</td>
+                            <td>{{ asignacion.fecha_inicio }}</td>
+                            <td>{{ asignacion.fecha_fin }}</td>
+                            <td>
+                                <ul class="students-list">
+                                    {% for asignacion_estudiante in asignacion.estudiantes %}
+                                    <li>{{ asignacion_estudiante.estudiante.username }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td class="actions-cell">
+                                <button onclick="window.location.href='{{ url_for('editar_asignacion', id=asignacion.id) }}'" class="action-btn edit-btn">
+                                    Editar
+                                </button>
+                                <form method="POST" action="{{ url_for('eliminar_asignacion', id=asignacion.id) }}" class="inline-form">
+                                    <button type="submit" class="action-btn delete-btn" onclick="return confirm('¿Estás seguro de que quieres eliminar esta asignación?')">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #2c3e50;
+        --success-color: #27ae60;
+        --danger-color: #e74c3c;
+        --background-color: #f5f6fa;
+        --card-background: #ffffff;
+        --text-primary: #2c3e50;
+        --text-secondary: #7f8c8d;
+        --border-radius: 12px;
+        --transition-speed: 0.3s;
+    }
+
+    /* Estilos generales */
+    body {
+        background-color: var(--background-color);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    /* Título principal */
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .dashboard-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+
+    /* Tarjetas */
+    .dashboard-card {
+        background: var(--card-background);
+        border-radius: var(--border-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    /* Títulos de sección */
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+    /* Formularios */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e1e8ed;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        background-color: #fff;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    /* Botones */
+    .submit-btn,
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary-color), #2980b9);
+        color: white;
+        width: 100%;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #2980b9, var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    }
+
+    /* Tabla */
+    .table-container {
+        overflow-x: auto;
+        border-radius: var(--border-radius);
+    }
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    .dashboard-table th,
+    .dashboard-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e1e8ed;
+    }
+
+    .dashboard-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-table tbody tr {
+        transition: background-color var(--transition-speed);
+    }
+
+    .dashboard-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Botones de acción en la tabla */
+    .actions-cell {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        border-radius: var(--border-radius);
+    }
+
+    .edit-btn {
+        background-color: #f8f9fa;
+        color: var(--secondary-color);
+        border: 1px solid #e1e8ed;
+    }
+
+    .delete-btn {
+        background-color: #fff5f5;
+        color: var(--danger-color);
+        border: 1px solid #ffe3e3;
+    }
+
+    .edit-btn:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+    /* Lista de estudiantes */
+    .students-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .students-list li {
+        padding: 0.25rem 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 0 1rem;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .actions-cell {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    /* Scroll personalizado */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+{% endblock %}

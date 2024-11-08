@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Registrarse</h2>
+<form method="POST" class="register-form" onsubmit="return validateForm()">
+    <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input type="text" class="form-control input-animated" id="username" name="username" required pattern="[a-zA-Z]+" title="El nombre de usuario solo puede contener letras.">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control input-animated" id="password" name="password" required pattern="[a-zA-Z0-9]{6,20}" title="La contraseña debe ser alfanumérica y tener entre 6 y 20 caracteres.">
+    </div>
+    <div class="mb-3">
+        <label for="rol" class="form-label">Rol</label>
+        <select class="form-select input-animated" id="rol" name="rol" required>
+            <option value="estudiante">Estudiante</option>
+            <option value="profesor">Profesor</option>
+            <option value="admin">Administrador</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-animated">Registrarse</button>
+</form>
+
+<!-- Estilos CSS -->
+<style>
+    /* Fondo general */
+    body {
+        background: linear-gradient(135deg, #F4F7F9, #DDE6F2);
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Título estilizado */
+    .title {
+        text-align: center;
+        color: #002855;
+        font-size: 2.8rem;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        animation: fadeInDown 1s ease;
+    }
+
+    /* Estilo del formulario */
+    .register-form {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 3rem;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 1.2s ease;
+        border: 2px solid #0171BB;
+    }
+
+    /* Inputs con bordes estilizados y animación */
+    .input-animated {
+        border: 1px solid #BDC3C7;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+    }
+
+    /* Foco en los inputs */
+    .input-animated:focus {
+        border-color: #0171BB;
+        box-shadow: 0 0 10px rgba(1, 113, 187, 0.4);
+        outline: none;
+        transform: scale(1.05);
+    }
+
+    /* Botón estilizado con animación */
+    .btn-animated {
+        width: 100%;
+        padding: 14px;
+        background: #002855;
+        border: none;
+        color: white;
+        font-size: 1.3rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    /* Hover y efecto de click en el botón */
+    .btn-animated:hover {
+        background: #0171BB;
+        transform: translateY(-2px);
+    }
+
+    .btn-animated:active {
+        transform: translateY(1px);
+    }
+
+    /* Estilo de etiquetas */
+    .form-label {
+        color: #002855;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Margen en campos */
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Efectos de animación */
+    @keyframes fadeInUp {
+        0% { transform: translateY(30px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+        0% { transform: translateY(-30px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .register-form {
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 2.2rem;
+        }
+
+        .btn-animated {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<!-- JavaScript para validaciones adicionales -->
+<script>
+    function validateForm() {
+        const username = document.getElementById('username').value;
+        const usernamePattern = /^[a-zA-Z]+$/;
+        if (!usernamePattern.test(username)) {
+            alert('El nombre de usuario solo puede contener letras.');
+            return false;
+        }
+
+        const password = document.getElementById('password').value;
+        const passwordPattern = /^[a-zA-Z0-9]{6,20}$/;
+        if (!passwordPattern.test(password)) {
+            alert('La contraseña debe ser alfanumérica y tener entre 6 y 20 caracteres.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% endblock %}
