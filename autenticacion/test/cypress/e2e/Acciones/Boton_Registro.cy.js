@@ -1,5 +1,4 @@
 
-// ya
 describe('Navigation Test', () => {
   // Caso de prueba para verificar la navegación hacia la página de registro
   it('Debe navegar a la página de registro', () => {

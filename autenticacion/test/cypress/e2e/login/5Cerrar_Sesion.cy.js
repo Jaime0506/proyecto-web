@@ -1,5 +1,4 @@
 
-// jhon
 describe('Login Test', () => {
     it('Debe iniciar sesión con credenciales válidas y luego cerrar sesión.', () => {
       // Visitar la página de inicio

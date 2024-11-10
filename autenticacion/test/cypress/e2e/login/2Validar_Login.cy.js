@@ -1,5 +1,3 @@
-
-// YA
 describe('Login Test', () => {
   // Caso de prueba para verificar el inicio de sesión con credenciales válidas
   it('Debe iniciar sesión con credenciales válidas', () => {

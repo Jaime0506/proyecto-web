@@ -27,7 +27,7 @@ describe('Navigation Test', () => {
     cy.contains('button', 'Editar perfil').click()
     
     // Encuentra el campo de entrada para el nombre completo, borra el contenido actual y escribe un nuevo nombre
-    cy.get('input[name="CambioNombre"]').clear().type('Jaime ')
+    cy.get('input[name="CambioNombre"]').clear().type('Juliana Bolivar Suarez ')
 
     // Opcional: Haz clic en el botón de guardar para confirmar los cambios
     cy.get('button[type="submit"]').contains('Guardar').click()
