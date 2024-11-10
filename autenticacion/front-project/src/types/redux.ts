@@ -3,7 +3,7 @@ import type { Dayjs } from 'dayjs'
 
 export interface CustomError {
     message: string | null | undefined
-    
+
 }
 export interface ScheduleItemType {
     day: number // Usualmente un número de 0 (domingo) a 6 (sábado)
@@ -75,4 +75,22 @@ export interface DataType {
     subjects: SubjectsType[] | null
     attendance: AttendanceType[] | null
     currentSubject: SubjectsType | null
+}
+
+export interface TaskType {
+    task_id: string;
+    title: string;
+    description: string;
+    created_at: string;
+    due_date: string;
+    create_by: string;
+    subject_id: string;
+}
+
+// Agregamos `tasks` al `DataType`
+export interface DataType {
+    subjects: SubjectsType[] | null;
+    attendance: AttendanceType[] | null;
+    currentSubject: SubjectsType | null;
+    tasks: TaskType[] | null; // Nueva propiedad para almacenar tareas
 }

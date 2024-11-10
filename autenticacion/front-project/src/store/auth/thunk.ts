@@ -2,10 +2,18 @@ import { supabase } from "../../supabase/supabase";
 import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout, setError } from "./authSlice";
-import { attendance, subjects } from "../data/dataSlice";
+import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
 import { UserType } from "../../types/redux";
 import { uploadFile } from "../../utils/uploadFiles";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
+
+
+type TaskData = {
+    title: string;
+    description: string;
+    dueDate: string;
+};
 
 export const handleOnGetAttendance = (subject_id: string) => {
     return async (dispatch: AppDispatch) => {
@@ -28,6 +36,54 @@ export const handleOnGetAttendance = (subject_id: string) => {
         console.log(funcData, funcError);
     };
 };
+
+export const handleOnCreateTask = (taskData: TaskData) => {
+    return async () => {
+      const { title, description, dueDate } = taskData;
+  
+      const { data, error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .insert([
+          {
+            title,
+            description,
+            due_date: dueDate,
+            created_at: new Date(),
+            create_by: "uuid_del_usuario", // Reemplaza con el ID del usuario
+            subject_id: "uuid_de_asignatura", // Reemplaza con el ID de la asignatura
+          },
+        ]);
+  
+      if (error) {
+        console.log("Error al crear tarea:", error);
+        return;
+      }
+  
+      console.log("Tarea creada:", data);
+    };
+  };
+
+
+export const handleOnGetTasks = createAsyncThunk(
+    'data/getTasks',
+    async (_, { dispatch }) => {
+        const { data, error } = await supabase
+            .schema("gr7")
+            .from("task")
+            .select('*');
+
+        if (error) {
+            console.error("Error loading tasks:", error);
+            return []; // Retorna un array vacío en caso de error
+        }
+
+        // Despacha las tareas al estado de Redux
+        dispatch(setTasks(data)); // Asegúrate de que 'setTasks' esté correctamente definido en tu dataSlice
+        return data; // Retorna los datos para que se puedan usar si es necesario
+    }
+);
+
 
 export const handleOnCheckingCurrentUser = () => {
     return async (dispatch: AppDispatch) => {
@@ -166,11 +222,11 @@ export const handleOnSetName = (name: string) => {
 
 export const handleOnUploadPhoto = (file: File, user: UserType) => {
     return async (dispatch: AppDispatch) => {
-        const resposne = await uploadFile(file, user?.id); 
+        const resposne = await uploadFile(file, user?.id);
 
         //const errorMod = {...resposne?.error}
 
-        
+
 
         if (resposne?.error) {
             dispatch(setError(resposne.error))
