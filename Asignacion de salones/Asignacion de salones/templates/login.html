@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Iniciar sesión</h2>
+<form method="POST" class="login-form">
+    <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input type="text" class="form-control input-animated" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control input-animated" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-animated">Iniciar sesión</button>
+</form>
+
+<!-- Estilos CSS -->
+<style>
+    /* Fondo claro con un diseño limpio */
+    body {
+        background-color: #F4F7F9;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Título estilizado en color azul oscuro */
+    .title {
+        text-align: center;
+        color: #002855;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Contenedor del formulario con estilo profesional */
+    .login-form {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 2.5rem;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Inputs con bordes estilizados en azul claro */
+    .input-animated {
+        border: 2px solid #BDC3C7;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* Foco en los inputs */
+    .input-animated:focus {
+        border-color: #0171BB;
+        box-shadow: 0 0 8px rgba(1, 113, 187, 0.3);
+        outline: none;
+    }
+
+    /* Botón de envío con colores institucionales */
+    .btn-animated {
+        width: 100%;
+        padding: 12px 18px;
+        background: #002855;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Hover y efecto de clic para el botón */
+    .btn-animated:hover {
+        background: #0171BB;
+    }
+    .btn-animated:active {
+        transform: scale(0.98);
+    }
+
+    /* Etiquetas estilizadas */
+    .form-label {
+        color: #002855;
+        font-weight: bold;
+    }
+
+    /* Mejoras en diseño de inputs */
+    .mb-3 {
+        margin-bottom: 20px;
+    }
+
+    /* Estilo responsivo */
+    @media (max-width: 768px) {
+        .login-form {
+            padding: 1.5rem;
+        }
+
+        .title {
+            font-size: 2rem;
+        }
+
+        .btn-animated {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
