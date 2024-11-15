@@ -1,9 +1,7 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { handleOnGetTasks } from "../../../store/auth/thunk";
 import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../../../store";
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { Card, CardBody, Divider, Button } from "@nextui-org/react";
 
 // Define la interfaz para el tipo de tarea (esto ayuda con TypeScript)
@@ -16,25 +14,15 @@ interface Task {
 
 export const Tasks = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // Obtenemos el estado del usuario y las tareas desde el store
   const userState = useAppSelector((state: RootState) => state.auth.user);
   const tasksFromStore: Task[] = useAppSelector((state: RootState) => state.data.tasks) || [];
 
   // Efecto para obtener las tareas cuando se monta el componente
-  useEffect(() => {
-    const fetchTasks = async () => {
-      await dispatch(handleOnGetTasks() as any);
-    };
-    fetchTasks();
-  }, [dispatch]);
+      dispatch(handleOnGetTasks());
 
-  // Función para redirigir a la página de entrega de tarea
-  const onTaskClick = (taskId: string) => {
-    // Muestra el mensaje en consola
-    navigate(`/app/board/taskDelivery/${taskId}`); // Redirige a TaskDelivery con el taskId en la URL
-  };
 
   // Función para redirigir al formulario de creación de tarea
   const handleCreateTask = () => {

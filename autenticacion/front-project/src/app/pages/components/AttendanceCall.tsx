@@ -6,7 +6,7 @@ export const AttendanceCall = () => {
   const state = useAppSelector((state) => state.data.attendance);
 
   const location = useLocation();
-  const {date} = location.state?.session;
+  const date = location.state?.session ? location.state.session.date : undefined;
 
   const renderAttendance = () => {
     return (
