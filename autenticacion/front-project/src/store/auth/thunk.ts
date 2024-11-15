@@ -3,17 +3,12 @@ import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout, setError } from "./authSlice";
 import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
-import { UserType } from "../../types/redux";
+import { UserType, TaskData } from "../../types/redux";
 import { uploadFile } from "../../utils/uploadFiles";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 
-type TaskData = {
-    title: string;
-    description: string;
-    dueDate: string;
-};
 
 export const handleOnGetAttendance = (subject_id: string) => {
     return async (dispatch: AppDispatch) => {
@@ -37,10 +32,12 @@ export const handleOnGetAttendance = (subject_id: string) => {
     };
 };
 
+
 export const handleOnCreateTask = (taskData: TaskData) => {
-    return async () => {
-      const { title, description, dueDate } = taskData;
+    return async (dispatch: AppDispatch) => {
+      const { title, description, dueDate, create_by, subject_id } = taskData;
   
+      // Inserción de la tarea en la base de datos de Supabase
       const { data, error } = await supabase
         .schema("gr7")
         .from("task")
@@ -50,20 +47,28 @@ export const handleOnCreateTask = (taskData: TaskData) => {
             description,
             due_date: dueDate,
             created_at: new Date(),
-            create_by: "uuid_del_usuario", // Reemplaza con el ID del usuario
-            subject_id: "uuid_de_asignatura", // Reemplaza con el ID de la asignatura
+            create_by, // Usamos el ID del usuario autenticado
+            subject_id, // Usamos el ID de la asignatura
           },
         ]);
   
       if (error) {
         console.log("Error al crear tarea:", error);
-        return;
+        return; // Salimos si ocurre un error
+      }
+  
+      if (!data) {
+        console.log("No se recibió ninguna tarea después de la inserción.");
+        return; // Salimos si 'data' es null o undefined
       }
   
       console.log("Tarea creada:", data);
+  
+      // Despachar la acción 'setTasks' solo si data no es null
+      dispatch(setTasks(data)); // Actualiza el estado de Redux con la nueva tarea
     };
   };
-
+  
 
 export const handleOnGetTasks = createAsyncThunk(
     'data/getTasks',
@@ -83,6 +88,11 @@ export const handleOnGetTasks = createAsyncThunk(
         return data; // Retorna los datos para que se puedan usar si es necesario
     }
 );
+
+
+
+
+
 
 
 export const handleOnCheckingCurrentUser = () => {

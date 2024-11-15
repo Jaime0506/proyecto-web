@@ -87,10 +87,18 @@ export interface TaskType {
     subject_id: string;
 }
 
+export interface TaskData {
+    title: string;
+    description: string;
+    dueDate: string;  // Asegúrate de que el campo sea 'dueDate' y no 'due_date'
+    create_by: string;
+    subject_id: string;
+  }
+
 // Agregamos `tasks` al `DataType`
 export interface DataType {
     subjects: SubjectsType[] | null;
     attendance: AttendanceType[] | null;
     currentSubject: SubjectsType | null;
-    tasks: TaskType[] | null; // Nueva propiedad para almacenar tareas
+    tasks: TaskType[]; // Nueva propiedad para almacenar tareas
 }
