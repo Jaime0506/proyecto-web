@@ -16,16 +16,22 @@ export const handleOnGetAttendance = (subject_id: string) => {
     console.log(data, error);
 
     dispatch(attendance(data));
-
-    const { data: funcData, error: funcError } = await supabase
-      .schema("gr7")
-      .rpc("update_attendance", {
-        p_subject_id: "6a4d43dc-d4b0-4ebc-94e9-a6bee2394cac",
-        p_user_id: "09cb613a-71df-4620-b067-edafb833fab9",
-      });
-    console.log(funcData, funcError);
   };
 };
+
+export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
+  return async () => {
+    const { data: funcData, error: funcError } = await supabase
+      .schema("gr7")
+      .rpc("update_attendance_metadata", {
+        p_subject_id,
+        p_user_id,
+        p_status,
+        p_date
+      });
+    console.log(funcData, funcError);
+  }
+}
 
 export const handleOnCreateTask = (taskData: TaskData) => {
   return async (dispatch: AppDispatch) => {
@@ -87,11 +93,10 @@ export const handleOnCheckingCurrentUser = () => {
 
     const { data } = await supabase.auth.getUser();
 
-    const { data: tableSubjects, error } = await supabase
+    const { data: tableSubjects } = await supabase
       .schema("gr7")
       .from("subjects")
       .select();
-    console.log(tableSubjects, error);
     dispatch(subjects(tableSubjects));
 
     if (!data.user) {
