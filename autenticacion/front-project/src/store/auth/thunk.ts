@@ -1,9 +1,10 @@
 import { supabase } from "../../supabase/supabase";
 import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
-import { checking, login, logout } from "./authSlice";
-import { attendance, subjects } from "../data/dataSlice";
-import { UserType } from "../../types/redux";
+import { checking, login, logout, setError } from "./authSlice";
+import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
+import { UserType, TaskData } from "../../types/redux";
+import { uploadFile } from "../../utils/uploadFiles";
 
 export const handleOnGetAttendance = (subject_id: string) => {
   return async (dispatch: AppDispatch) => {
@@ -15,15 +16,81 @@ export const handleOnGetAttendance = (subject_id: string) => {
     console.log(data, error);
 
     dispatch(attendance(data));
+  };
+};
 
-    const { data: funcData, error: funcError } = await supabase.schema("gr7").rpc(
-        "update_attendance",
+export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
+  return async () => {
+    const { data, error } = await supabase
+      .schema("gr7")
+      .rpc("update_attendance_metadata", {
+        p_subject_id,
+        p_user_id,
+        p_status,
+        p_date
+      });
+    console.log(data, error);
+  }
+}
+
+export const handleOnGetName = async(user_id: string) => {
+  const { data } = await supabase
+    .schema("gr7")
+    .rpc("get_user_profile", {user_id});
+    return data.name;
+}
+
+export const handleOnCreateTask = (taskData: TaskData) => {
+  return async (dispatch: AppDispatch) => {
+    const { title, description, dueDate, create_by, subject_id } = taskData;
+
+    // Inserción de la tarea en la base de datos de Supabase
+    const { data, error } = await supabase
+      .schema("gr7")
+      .from("task")
+      .insert([
         {
-          p_subject_id: "6a4d43dc-d4b0-4ebc-94e9-a6bee2394cac",
-          p_user_id: "09cb613a-71df-4620-b067-edafb833fab9",
-        }
-      );
-      console.log(funcData, funcError);
+          title,
+          description,
+          due_date: dueDate,
+          created_at: new Date(),
+          create_by, // Usamos el ID del usuario autenticado
+          subject_id, // Usamos el ID de la asignatura
+        },
+      ]);
+
+    if (error) {
+      console.log("Error al crear tarea:", error);
+      return; // Salimos si ocurre un error
+    }
+
+    if (!data) {
+      console.log("No se recibió ninguna tarea después de la inserción.");
+      return; // Salimos si 'data' es null o undefined
+    }
+
+    console.log("Tarea creada:", data);
+
+    // Despachar la acción 'setTasks' solo si data no es null
+    dispatch(setTasks(data)); // Actualiza el estado de Redux con la nueva tarea
+  };
+};
+
+export const handleOnGetTasks = () => {
+  return async (dispatch: AppDispatch) => {
+    const { data, error } = await supabase
+      .schema("gr7")
+      .from("task")
+      .select("*");
+
+    if (error) {
+      console.error("Error loading tasks:", error);
+      return []; // Retorna un array vacío en caso de error
+    }
+
+    // Despacha las tareas al estado de Redux
+    dispatch(setTasks(data)); // Asegúrate de que 'setTasks' esté correctamente definido en tu dataSlice
+    return data; // Retorna los datos para que se puedan usar si es necesario
   };
 };
 
@@ -33,15 +100,14 @@ export const handleOnCheckingCurrentUser = () => {
 
     const { data } = await supabase.auth.getUser();
 
-    const { data: tableSubjects, error } = await supabase
+    const { data: tableSubjects } = await supabase
       .schema("gr7")
       .from("subjects")
       .select();
-    console.log(tableSubjects, error);
     dispatch(subjects(tableSubjects));
 
     if (!data.user) {
-      dispatch(logout());
+      dispatch(logout(null));
 
       return;
     }
@@ -51,6 +117,7 @@ export const handleOnCheckingCurrentUser = () => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: data.user.email,
       role: data.user.user_metadata.role,
+      photoURL: data.user.user_metadata.photoURL,
     };
 
     dispatch(login(userLoged));
@@ -65,16 +132,17 @@ export const handleOnLogin = (user: FormType) => {
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
 
-    const userLoged = {
+    const userLoged: UserType = {
       id: data.user.id,
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
+      photoURL: data.user.user_metadata.photoURL,
     };
 
     dispatch(login(userLoged));
@@ -88,22 +156,29 @@ export const handleOnRegister = (user: FormType) => {
     const { data, error } = await supabase.auth.signUp({
       email: user.email,
       password: user.password,
+      options: {
+        data: {
+          name: null,
+          photoURL: null,
+        },
+      },
     });
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
 
     if (!data.user) return;
 
-    const userLoged = {
+    const userLoged: UserType = {
       id: data.user.id,
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
+      photoURL: null,
     };
 
     dispatch(login(userLoged));
@@ -118,11 +193,49 @@ export const handleOnLogout = () => {
 
     if (error) {
       console.log(error);
-      dispatch(logout());
+      dispatch(logout(error));
 
       return;
     }
 
-    dispatch(logout());
+    dispatch(logout(null));
+  };
+};
+
+export const handleOnSetName = (name: string) => {
+  return async (dispatch: AppDispatch) => {
+    const { data, error } = await supabase.auth.updateUser({
+      data: {
+        name,
+      },
+    });
+
+    if (error) {
+      dispatch(setError(error));
+    }
+
+    if (!data.user) return;
+
+    const userLoged: UserType = {
+      id: data.user.id,
+      name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
+      email: data.user.email,
+      role: data.user.user_metadata.role,
+      photoURL: null,
+    };
+
+    dispatch(login(userLoged));
+  };
+};
+
+export const handleOnUploadPhoto = (file: File, user: UserType) => {
+  return async (dispatch: AppDispatch) => {
+    const resposne = await uploadFile(file, user?.id);
+
+    //const errorMod = {...resposne?.error}
+
+    if (resposne?.error) {
+      dispatch(setError(resposne.error));
+    }
   };
 };
