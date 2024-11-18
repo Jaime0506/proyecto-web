@@ -21,7 +21,7 @@ export const handleOnGetAttendance = (subject_id: string) => {
 
 export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
   return async () => {
-    const { data: funcData, error: funcError } = await supabase
+    const { data, error } = await supabase
       .schema("gr7")
       .rpc("update_attendance_metadata", {
         p_subject_id,
@@ -29,8 +29,15 @@ export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string
         p_status,
         p_date
       });
-    console.log(funcData, funcError);
+    console.log(data, error);
   }
+}
+
+export const handleOnGetName = async(user_id: string) => {
+  const { data } = await supabase
+    .schema("gr7")
+    .rpc("get_user_profile", {user_id});
+    return data.name;
 }
 
 export const handleOnCreateTask = (taskData: TaskData) => {
