@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="welcome-title">Bienvenido al Sistema de Asignación de Salones</h1>
+<p class="welcome-text">Por favor, inicia sesión o regístrate para continuar.</p>
+
+<!-- Estilos CSS -->
+<style>
+    /* Fondo sobrio */
+    body {
+        background-color: #F4F7F9;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Estilo del título de bienvenida */
+    .welcome-title {
+        text-align: center;
+        color: #002855;
+        font-size: 3rem;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: fadeInDown 1.2s ease forwards;
+    }
+
+    /* Estilo del texto de bienvenida */
+    .welcome-text {
+        text-align: center;
+        color: #0171BB;
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+        font-weight: normal;
+        animation: fadeIn 1.5s ease forwards 0.3s;
+    }
+
+    /* Efecto de animación suave */
+    .welcome-title, .welcome-text {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Estilo de botón */
+    .btn-custom {
+        display: block;
+        width: 200px;
+        margin: 0 auto;
+        background-color: #0171BB;
+        color: #ffffff;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #002855;
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+        .welcome-title {
+            font-size: 2.2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Panel de Estudiante</h2>
+
+<h3 class="section-title">Mis asignaciones</h3>
+<table class="table table-striped table-bordered">
+    <thead class="table-header">
+        <tr>
+            <th>Salón</th>
+            <th>Profesor</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for asignacion_estudiante in asignaciones %}
+        <tr>
+            <td>{{ asignacion_estudiante.asignacion.salon.nombre }}</td>
+            <td>{{ asignacion_estudiante.asignacion.profesor.username }}</td>
+            <td>{{ asignacion_estudiante.asignacion.fecha_inicio }}</td>
+            <td>{{ asignacion_estudiante.asignacion.fecha_fin }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Estilos CSS -->
+<style>
+    /* Fondo sobrio */
+    body {
+        background-color: #F4F7F9;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Título estilizado */
+    .title {
+        text-align: center;
+        color: #002855;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Estilo de las secciones */
+    .section-title {
+        color: #0171BB;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+        border-bottom: 2px solid #0171BB;
+        padding-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    /* Tabla estilizada */
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        text-align: center;
+        animation: slideUp 0.8s ease;
+    }
+
+    .table-header {
+        background-color: #002855;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .table-striped tbody tr:hover {
+        background-color: #e8f4fb;
+        transition: background-color 0.3s ease;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Transiciones animadas */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Botón personalizado */
+    .btn-custom {
+        background-color: #0171BB;
+        color: #ffffff;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #002855;
+        transform: scale(1.05);
+    }
+
+    /* Ajustes de responsividad */
+    @media (max-width: 768px) {
+        .title {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+{% endblock %}

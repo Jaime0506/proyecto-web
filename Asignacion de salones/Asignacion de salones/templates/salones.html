@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="title">Gestión de Salones</h2>
+    
+    <div class="action-container">
+        <a href="{{ url_for('nuevo_salon') }}" class="btn btn-primary btn-animated">
+            <i class="fas fa-plus-circle"></i> Nuevo Salón
+        </a>
+    </div>
+
+    <div class="table-container glass-effect">
+        <table class="table">
+            <thead class="table-header">
+                <tr>
+                    <th><i class="fas fa-door-open"></i> Nombre</th>
+                    <th><i class="fas fa-users"></i> Capacidad</th>
+                    <th><i class="fas fa-cogs"></i> Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for salon in salones %}
+                <tr class="table-row">
+                    <td>{{ salon.nombre }}</td>
+                    <td>{{ salon.capacidad }} personas</td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('editar_salon', id=salon.id) }}" class="btn btn-warning btn-animated">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <form action="{{ url_for('eliminar_salon', id=salon.id) }}" method="POST" class="delete-form">
+                            <button type="submit" class="btn btn-danger btn-animated" onclick="return confirm('¿Estás seguro de querer eliminar este salón?')">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --background-color: #f5f6fa;
+        --text-color: #2d3436;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --hover-color: #2980b9;
+        --success-color: #27ae60;
+        --warning-color: #f1c40f;
+        --danger-color: #c0392b;
+    }
+
+    body {
+        background: var(--background-color);
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    .title {
+        text-align: center;
+        color: var(--primary-color);
+        font-size: 2.8rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 4px;
+        background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+        border-radius: 2px;
+    }
+
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        border-radius: 20px;
+    }
+
+    .action-container {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .table-container {
+        padding: 1.5rem;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 1rem;
+    }
+
+    .table-header {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .table-header th {
+        color: white;
+        padding: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+    }
+
+    .table-header th i {
+        margin-right: 8px;
+    }
+
+    .table-row {
+        transition: all 0.3s ease;
+    }
+
+    .table-row:nth-child(even) {
+        background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .table-row:hover {
+        background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.2));
+        transform: scale(1.01);
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+    }
+
+    .actions-cell {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .delete-form {
+        display: inline;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .btn-animated {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-animated:hover::after {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-warning {
+        background: linear-gradient(45deg, var(--warning-color), #f39c12);
+        box-shadow: 0 4px 15px rgba(241, 196, 15, 0.2);
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, var(--danger-color), var(--accent-color));
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table-container {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .table-row {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 0 10px;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            padding: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .actions-cell {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .table td {
+            padding: 0.8rem;
+        }
+    }
+</style>
+
+<!-- Asegúrate de incluir Font Awesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="messaging-container">
+    <h2 class="messaging-title">Sistema de Mensajes</h2>
+    
+    <!-- Formulario para enviar nuevo mensaje -->
+    <div class="message-form-container glass-effect">
+        <h3 class="section-title">Enviar Nuevo Mensaje</h3>
+        <form method="POST" action="{{ url_for('enviar_mensaje') }}" class="message-form">
+            <div class="form-group">
+                <label for="destinatario_id">Destinatario:</label>
+                <select name="destinatario_id" id="destinatario_id" class="form-control custom-select" required>
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.id }}">{{ usuario.username }} ({{ usuario.rol }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="asunto">Asunto:</label>
+                <input type="text" name="asunto" id="asunto" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="contenido">Mensaje:</label>
+                <textarea name="contenido" id="contenido" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn-send pulse">Enviar Mensaje</button>
+        </form>
+    </div>
+
+    <!-- Bandeja de entrada -->
+    <div class="inbox-container">
+        <h3 class="section-title">Mensajes Recibidos</h3>
+        <div class="messages-list">
+            {% for mensaje in mensajes_recibidos %}
+            <div class="message-card glass-effect {% if not mensaje.leido %}unread{% endif %}" data-aos="fade-up">
+                <div class="message-header">
+                    <span class="sender"><i class="fas fa-user-circle"></i> {{ mensaje.remitente.username }} ({{ mensaje.remitente.rol }})</span>
+                    <span class="date"><i class="far fa-clock"></i> {{ mensaje.fecha_envio.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                <div class="message-subject">{{ mensaje.asunto }}</div>
+                <div class="message-content">{{ mensaje.contenido }}</div>
+                <div class="message-actions">
+                    {% if not mensaje.leido %}
+                    <a href="{{ url_for('marcar_leido', mensaje_id=mensaje.id) }}" class="btn-action read-action">
+                        <i class="fas fa-check"></i> Marcar como leído
+                    </a>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('eliminar_mensaje', mensaje_id=mensaje.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-action delete" onclick="return confirm('¿Estás seguro de eliminar este mensaje?')">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-messages">No hay mensajes recibidos</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Mensajes enviados -->
+    <div class="sent-container">
+        <h3 class="section-title">Mensajes Enviados</h3>
+        <div class="messages-list">
+            {% for mensaje in mensajes_enviados %}
+            <div class="message-card glass-effect" data-aos="fade-up">
+                <div class="message-header">
+                    <span class="recipient"><i class="fas fa-paper-plane"></i> {{ mensaje.destinatario.username }} ({{ mensaje.destinatario.rol }})</span>
+                    <span class="date"><i class="far fa-clock"></i> {{ mensaje.fecha_envio.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                <div class="message-subject">{{ mensaje.asunto }}</div>
+                <div class="message-content">{{ mensaje.contenido }}</div>
+                <div class="message-actions">
+                    <form method="POST" action="{{ url_for('eliminar_mensaje', mensaje_id=mensaje.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-action delete" onclick="return confirm('¿Estás seguro de eliminar este mensaje?')">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-messages">No hay mensajes enviados</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #5c6ac4;
+        --accent-color: #00c2ff;
+        --danger-color: #ff4757;
+        --text-color: #2d3436;
+        --light-text: #636e72;
+        --background: #f5f6fa;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--background);
+        color: var(--text-color);
+    }
+
+    .messaging-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 20px;
+    }
+
+    .messaging-title {
+        text-align: center;
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+    }
+
+    .messaging-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+        border-radius: 2px;
+    }
+
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+
+    .message-form-container {
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .message-form-container:hover {
+        transform: translateY(-5px);
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 24px;
+        background: var(--accent-color);
+        border-radius: 2px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e1e1;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        outline: none;
+    }
+
+    .custom-select {
+        appearance: none;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a90e2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 1rem center;
+        background-size: 1em;
+    }
+
+    .btn-send {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-send:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .message-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(31, 38, 135, 0.2);
+    }
+
+    .unread {
+        border-left: 4px solid var(--accent-color);
+        background: linear-gradient(to right, rgba(0, 194, 255, 0.1), transparent);
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        color: var(--light-text);
+    }
+
+    .message-subject {
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        color: var(--primary-color);
+    }
+
+    .message-content {
+        line-height: 1.6;
+        color: var(--text-color);
+        margin-bottom: 1.2rem;
+    }
+
+    .btn-action {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .read-action {
+        background: var(--secondary-color);
+        color: white;
+        text-decoration: none;
+    }
+
+    .read-action:hover {
+        background: #4a5ab9;
+        transform: translateY(-2px);
+    }
+
+    .btn-action.delete {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .btn-action.delete:hover {
+        background: #ff3344;
+        transform: translateY(-2px);
+    }
+
+    .no-messages {
+        text-align: center;
+        color: var(--light-text);
+        padding: 2rem;
+        font-style: italic;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+    }
+
+    /* Animación de pulso para el botón de enviar */
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(74, 144, 226, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+        }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .messaging-container {
+            padding: 10px;
+            margin: 1rem auto;
+        }
+
+        .messaging-title {
+            font-size: 2rem;
+        }
+
+        .message-card {
+            padding: 1rem;
+        }
+
+        .message-header {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<!-- Asegúrate de incluir Font Awesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
