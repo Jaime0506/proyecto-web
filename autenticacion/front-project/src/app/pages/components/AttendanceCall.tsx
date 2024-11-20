@@ -4,15 +4,25 @@ import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { handleOnGetName, handleOnSubmitAttendance } from "../../../store/auth/thunk";
 import { useState } from "react";
 
+interface AttendanceCall {
+  p_subject_id: string, 
+  p_user_id: string, 
+  p_status: string, 
+  p_date: string
+}
+
 export const AttendanceCall = () => {
   const states = ["si", "no", "re"];
   const attendanceState = useAppSelector((state) => state.data.attendance);
+  const { name } = useAppSelector((state) => state.data.currentSubject) || {};
+
   const dispatch = useAppDispatch();
   const location = useLocation();
   const date = location.state?.session?.date;
 
   const [names, setNames] = useState<Record<string, string>>({});
-
+  const [attendance, setAttendance] = useState<AttendanceCall[]>([]);
+  
   const fetchName = async (user_id: string) => {
     if (!names[user_id]) {
       const name = await handleOnGetName(user_id);
@@ -20,26 +30,33 @@ export const AttendanceCall = () => {
     }
   };
 
-  const handleSubmit = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
-    dispatch(handleOnSubmitAttendance(p_subject_id, p_user_id, p_status, p_date));
+  const handleSubmit = () => {
+    attendance.map((call)=>{
+      dispatch(handleOnSubmitAttendance(call.p_subject_id, call.p_user_id, call.p_status, call.p_date));
+    });
+    setAttendance([])
   };
 
-  const renderInputs = (
-    attendance_id: string,
-    subject_id: string,
-    user_id: string,
-    status: string | undefined
-  ) =>
-    states.map((state, index) => (
-      <input
-        key={index}
-        type="radio"
-        name={attendance_id}
-        value={state}
-        defaultChecked={status === state}
-        onClick={() => handleSubmit(subject_id, user_id, state, date)}
-      />
-    ));
+  const handleOnClick = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
+    setAttendance((prevAttendance) => ([...prevAttendance, {p_subject_id, p_user_id, p_status, p_date}]));
+  }
+
+  const renderInputs = ( attendance_id: string, subject_id: string, user_id: string, status: string | undefined ) => ( 
+    <div className="flex space-x-1">
+      {states.map((state, index) => (
+        <div key={index} className="flex items-center space-x-1">
+          <h1>{state}</h1>
+          <input
+            type="radio"
+            name={attendance_id}
+            value={state}
+            defaultChecked={status === state}
+            onClick={() => handleOnClick(subject_id, user_id, state, date)}
+          />
+        </div>
+      ))}
+    </div>
+  );
 
   const renderAttendance = () => {
     return (
@@ -47,14 +64,14 @@ export const AttendanceCall = () => {
         const { user_id, subject_id, attendance_id } = attendance;
         const { status } = attendance.metadata?.find((meta) => meta.date === date) || {};
 
-          fetchName(user_id);
+        fetchName(user_id);
 
         return (
           <TableRow key={index}>
             <TableCell>{names[user_id] || "Loading..."}</TableCell>
-            <TableCell>{subject_id}</TableCell>
+            <TableCell>{name}</TableCell>
             <TableCell>
-              <label>{renderInputs(attendance_id, subject_id, user_id, status)}</label>
+              {renderInputs(attendance_id, subject_id, user_id, status)}
             </TableCell>
           </TableRow>
         );
@@ -66,12 +83,13 @@ export const AttendanceCall = () => {
     <div className="flex flex-col gap-3">
       <Table color={"success"} aria-label="Example static collection table">
         <TableHeader>
-          <TableColumn>Nombre</TableColumn>
-          <TableColumn>Subject ID</TableColumn>
+          <TableColumn>Estudiante</TableColumn>
+          <TableColumn>Asignatura</TableColumn>
           <TableColumn>Asistencia</TableColumn>
         </TableHeader>
         <TableBody>{renderAttendance()}</TableBody>
       </Table>
+      <button onClick={()=>{handleSubmit()}}>Enviar</button>
     </div>
   );
 };
