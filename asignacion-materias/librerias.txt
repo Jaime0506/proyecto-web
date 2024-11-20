@@ -1,0 +1,10 @@
+django librerías:
+
+pip install django             
+pip install supabase    
+pip install django-cors-headers
+pip install djangorestframework
+pip install python-dotenv
+
+React librerías:
+npm install react-scripts      
