@@ -70,3 +70,15 @@ export interface DataType {
     attendance: AttendanceType[] | null
     currentSubject: SubjectsType | null
 }
+
+/// Funcionamiento para modulo de microdesafios
+
+export interface MissionType {
+    id: string;
+    name: string;
+    description: string;
+    points: number;
+    day: string;
+    schedule: string;
+  }
+  

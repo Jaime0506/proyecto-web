@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react"
-
 import { Button } from "@nextui-org/button"
 import { Image } from "@nextui-org/image"
 import { Input } from "@nextui-org/input"
-
 import { Link } from "react-router-dom"
-
 import login_student from '../../assets/login_student.svg'
 import { validateEmail, validatePassword } from "../../utils/validationEmail"
 import { useAuth } from "../../hooks/useAuth"
 
+
 interface FormType {
     email: string
     password: string
+    isAdmin?: boolean
 }
 
 interface errorsType {
@@ -26,12 +25,12 @@ const errorsInit:errorsType = {
 }
 
 export const LoginPage = () => {
-
     const { onLogin } = useAuth()
     const [isVisible, setIsVisible] = useState(false);
     const [formValues, setFormValues] = useState<FormType>({
         email: "",
-        password: ""
+        password: "",
+        isAdmin: false
     });
     const [errors, setErrors] = useState(errorsInit);
 
@@ -74,6 +73,7 @@ export const LoginPage = () => {
             [e.target.name]: e.target.value
         })
     }
+
 
     const toogleVisible = () => setIsVisible(state => !state)
 
@@ -149,9 +149,17 @@ export const LoginPage = () => {
                                 >
                                     Registrate
                                 </Button>
+
+                                <Button
+                                    as={Link}
+                                    radius="none"
+                                    className="bg-white border-primary border-[1.3px] text-black"
+                                    to={'/auth/admi'}
+                                >
+                                    Acceso Administrativo
+                                </Button>
                             </div>
                         </form>
-
                     </div>
                 </section>
             </div>

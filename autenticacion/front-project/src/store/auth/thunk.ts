@@ -1,5 +1,5 @@
 import { supabase } from "../../supabase/supabase";
-import { FormType } from "../../types/authForms";
+import { FormType, FormTypeA } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout } from "./authSlice";
 import { attendance, subjects } from "../data/dataSlice";
@@ -124,5 +124,45 @@ export const handleOnLogout = () => {
     }
 
     dispatch(logout());
+  };
+};
+
+export const handleOnLoginAdmin = (user: FormTypeA) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(checking());
+
+    // Intentar iniciar sesión
+    const { data, error } = await supabase.auth.signInWithPassword(user);
+
+    if (error) {
+      console.log(error);
+      dispatch(logout());
+      return;
+    }
+
+    // Si el inicio de sesión es exitoso, verificar si el usuario está en la tabla "administrativo"
+    const { data: adminData, error: adminError } = await supabase
+      .schema("gr7")
+      .from("administrativo")
+      .select()
+      .eq("user_id", data.user.id)
+      .single(); // single() asegura que solo se espera un resultado
+
+    if (adminError || !adminData) {
+      console.log("No es un administrador o hubo un error:", adminError);
+      dispatch(logout());
+      return;
+    }
+
+    // Crear el objeto del usuario administrador logueado
+    const userLoged = {
+      id: data.user.id,
+      name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
+      email: data.user.email,
+
+      role: "admin", // Asignar un rol específico para administradores
+    };
+
+    dispatch(login(userLoged));
   };
 };

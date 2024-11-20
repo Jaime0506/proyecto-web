@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import { MainRoutes } from "./routes/MainRoutes";
 import { NextUIProvider } from "@nextui-org/system";
 import { useEffect } from "react";
