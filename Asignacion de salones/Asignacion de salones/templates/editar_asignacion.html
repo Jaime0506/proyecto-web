@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="edit-container">
+    <div class="edit-card">
+        <div class="card-header">
+            <h2 class="page-title">Editar Asignación</h2>
+        </div>
+        
+        <form method="POST" class="edit-form">
+            <div class="form-group">
+                <label for="salon_id">Salón</label>
+                <div class="select-wrapper">
+                    <select name="salon_id" id="salon_id" required>
+                        {% for salon in salones %}
+                        <option value="{{ salon.id }}" {% if salon.id == asignacion.salon_id %}selected{% endif %}>
+                            {{ salon.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="profesor_id">Profesor</label>
+                <div class="select-wrapper">
+                    <select name="profesor_id" id="profesor_id" required>
+                        {% for profesor in profesores %}
+                        <option value="{{ profesor.id }}" {% if profesor.id == asignacion.profesor_id %}selected{% endif %}>
+                            {{ profesor.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_inicio">Fecha y hora de inicio</label>
+                <input type="datetime-local" 
+                       name="fecha_inicio" 
+                       id="fecha_inicio" 
+                       value="{{ asignacion.fecha_inicio.strftime('%Y-%m-%dT%H:%M') }}" 
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_fin">Fecha y hora de fin</label>
+                <input type="datetime-local" 
+                       name="fecha_fin" 
+                       id="fecha_fin" 
+                       value="{{ asignacion.fecha_fin.strftime('%Y-%m-%dT%H:%M') }}" 
+                       required>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="save-btn">
+                    <span class="btn-text">Guardar cambios</span>
+                </button>
+                <a href="{{ url_for('admin_dashboard') }}" class="cancel-btn">
+                    <span class="btn-text">Volver al dashboard</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #4a90e2;
+        --primary-dark: #357abd;
+        --secondary-color: #2c3e50;
+        --success-color: #27ae60;
+        --danger-color: #e74c3c;
+        --background-color: #f5f6fa;
+        --card-background: #ffffff;
+        --text-primary: #2c3e50;
+        --text-secondary: #7f8c8d;
+        --border-radius: 12px;
+        --transition-speed: 0.3s;
+        --input-border: #e1e8ed;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Contenedor principal */
+    .edit-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: var(--background-color);
+        background-image: 
+            radial-gradient(at 40% 20%, rgba(74,144,226,0.1) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, rgba(44,62,80,0.1) 0px, transparent 50%),
+            radial-gradient(at 0% 50%, rgba(74,144,226,0.1) 0px, transparent 50%);
+    }
+
+    /* Tarjeta del formulario */
+    .edit-card {
+        width: 100%;
+        max-width: 600px;
+        background: var(--card-background);
+        border-radius: var(--border-radius);
+        box-shadow: 0 8px 30px var(--shadow-color);
+        overflow: hidden;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Encabezado de la tarjeta */
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .page-title {
+        color: white;
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    /* Formulario */
+    .edit-form {
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    /* Inputs y Selects */
+    .select-wrapper {
+        position: relative;
+    }
+
+    .select-wrapper::after {
+        content: '▼';
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    select,
+    input[type="datetime-local"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--input-border);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        color: var(--text-primary);
+        background-color: white;
+        transition: all var(--transition-speed);
+        appearance: none;
+    }
+
+    select {
+        padding-right: 2.5rem;
+    }
+
+    select:focus,
+    input[type="datetime-local"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    /* Grupo de botones */
+    .button-group {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    /* Botones */
+    .save-btn,
+    .cancel-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .save-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+    }
+
+    .cancel-btn {
+        background: transparent;
+        border: 2px solid var(--input-border);
+        color: var(--text-secondary);
+    }
+
+    .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    }
+
+    .cancel-btn:hover {
+        background-color: var(--background-color);
+        border-color: var(--text-secondary);
+    }
+
+    .btn-text {
+        margin: 0 0.5rem;
+    }
+
+    /* Efectos hover */
+    .edit-card:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+        .edit-container {
+            padding: 1rem;
+        }
+
+        .edit-card {
+            border-radius: var(--border-radius);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+        }
+
+        .edit-form {
+            padding: 1.5rem;
+        }
+
+        .button-group {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Scroll personalizado */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+{% endblock %}

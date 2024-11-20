@@ -1,5 +1,10 @@
-import { Dayjs } from 'dayjs'
+import type { AuthError } from '@supabase/supabase-js'
+import type { Dayjs } from 'dayjs'
 
+export interface CustomError {
+    message: string | null | undefined
+
+}
 export interface ScheduleItemType {
     day: number // Usualmente un número de 0 (domingo) a 6 (sábado)
     timeStart: Dayjs // Hora de inicio de la clase
@@ -33,12 +38,13 @@ export interface UserType {
     name: string | null
     email: string | undefined
     role: string | undefined
+    photoURL: string | null
 }
 
 export interface AuthType {
     status: "checking" | "not-authenticated" | "authenticated"
     user: UserType | null
-    errorMessage: string | null
+    error: AuthError | null | CustomError
 }
 
 export interface SessionType {
@@ -71,6 +77,7 @@ export interface DataType {
     currentSubject: SubjectsType | null
 }
 
+
 /// Funcionamiento para modulo de microdesafios
 
 export interface MissionType {
@@ -82,3 +89,30 @@ export interface MissionType {
     schedule: string;
   }
   
+
+export interface TaskType {
+    task_id: string;
+    title: string;
+    description: string;
+    created_at: string;
+    due_date: string;
+    create_by: string;
+    subject_id: string;
+}
+
+export interface TaskData {
+    title: string;
+    description: string;
+    dueDate: string;  // Asegúrate de que el campo sea 'dueDate' y no 'due_date'
+    create_by: string;
+    subject_id: string;
+  }
+
+// Agregamos `tasks` al `DataType`
+export interface DataType {
+    subjects: SubjectsType[] | null;
+    attendance: AttendanceType[] | null;
+    currentSubject: SubjectsType | null;
+    tasks: TaskType[]; // Nueva propiedad para almacenar tareas
+}
+

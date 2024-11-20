@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <!-- Título principal -->
+    <h2 class="title text-primary mb-5">Panel de Profesor</h2>
+
+    <!-- Sección de Asignaciones -->
+    <h3 class="section-title text-primary mb-4">Mis Asignaciones</h3>
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-header">
+            <tr>
+                <th>Salón</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Fin</th>
+                <th>Estudiantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asignacion in asignaciones %}
+            <tr>
+                <td>{{ asignacion.salon.nombre }}</td>
+                <td>{{ asignacion.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+                <td>{{ asignacion.fecha_fin.strftime('%d/%m/%Y') }}</td>
+                <td>
+                    <ul>
+                        {% for asignacion_estudiante in asignacion.estudiantes %}
+                        <li>{{ asignacion_estudiante.estudiante.username }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">No hay asignaciones disponibles</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Estilos CSS -->
+<style>
+    /* Fondo sobrio */
+    body {
+        background-color: #F4F7F9;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Título principal estilizado */
+    .title {
+        text-align: center;
+        color: #002855;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        animation: fadeInDown 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    /* Efecto de entrada del título */
+    @keyframes fadeInDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Títulos de las secciones */
+    .section-title {
+        color: #0171BB;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    /* Tabla con diseño mejorado */
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        text-align: center;
+        animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Encabezado de la tabla */
+    .table-header {
+        background-color: #002855;
+        color: #ffffff;
+    }
+
+    /* Fila de colores alternos en la tabla */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+
+    /* Bordes de la tabla */
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    /* Ajustes para celdas */
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 12px;
+    }
+
+    /* Etiquetas estilizadas */
+    .form-label {
+        color: #002855;
+        font-weight: bold;
+    }
+
+    /* Botones con efecto hover y estilo institucional */
+    .btn-animated {
+        width: 100%;
+        padding: 12px 18px;
+        background: #002855;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-animated:hover {
+        background: #0171BB;
+        transform: translateY(-2px);
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 768px) {
+        .title {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .btn-animated {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+{% endblock %}

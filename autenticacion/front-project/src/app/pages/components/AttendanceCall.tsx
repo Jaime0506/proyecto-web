@@ -1,44 +1,77 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
 import { useLocation } from "react-router-dom";
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { handleOnGetName, handleOnSubmitAttendance } from "../../../store/auth/thunk";
+import { useState } from "react";
+
+interface AttendanceCall {
+  p_subject_id: string, 
+  p_user_id: string, 
+  p_status: string, 
+  p_date: string
+}
 
 export const AttendanceCall = () => {
-  const state = useAppSelector((state) => state.data.attendance);
+  const states = ["si", "no", "re"];
+  const attendanceState = useAppSelector((state) => state.data.attendance);
+  const { name } = useAppSelector((state) => state.data.currentSubject) || {};
 
+  const dispatch = useAppDispatch();
   const location = useLocation();
-  const {date} = location.state?.session;
+  const date = location.state?.session?.date;
+
+  const [names, setNames] = useState<Record<string, string>>({});
+  const [attendance, setAttendance] = useState<AttendanceCall[]>([]);
+  
+  const fetchName = async (user_id: string) => {
+    if (!names[user_id]) {
+      const name = await handleOnGetName(user_id);
+      setNames((prevNames) => ({ ...prevNames, [user_id]: name }));
+    }
+  };
+
+  const handleSubmit = () => {
+    attendance.map((call)=>{
+      dispatch(handleOnSubmitAttendance(call.p_subject_id, call.p_user_id, call.p_status, call.p_date));
+    });
+    setAttendance([])
+  };
+
+  const handleOnClick = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
+    setAttendance((prevAttendance) => ([...prevAttendance, {p_subject_id, p_user_id, p_status, p_date}]));
+  }
+
+  const renderInputs = ( attendance_id: string, subject_id: string, user_id: string, status: string | undefined ) => ( 
+    <div className="flex space-x-1">
+      {states.map((state, index) => (
+        <div key={index} className="flex items-center space-x-1">
+          <h1>{state}</h1>
+          <input
+            type="radio"
+            name={attendance_id}
+            value={state}
+            defaultChecked={status === state}
+            onClick={() => handleOnClick(subject_id, user_id, state, date)}
+          />
+        </div>
+      ))}
+    </div>
+  );
 
   const renderAttendance = () => {
     return (
-      state?.map((attendance, index) => {
-        const {status} = attendance.metadata?.find((meta) => meta.date === date) || {};
+      attendanceState?.map((attendance, index) => {
+        const { user_id, subject_id, attendance_id } = attendance;
+        const { status } = attendance.metadata?.find((meta) => meta.date === date) || {};
+
+        fetchName(user_id);
 
         return (
           <TableRow key={index}>
-            <TableCell>{attendance.user_id}</TableCell>
-            <TableCell>{attendance.subject_id}</TableCell>
-            <TableCell>{attendance.attendance_id}</TableCell>
+            <TableCell>{names[user_id] || "Loading..."}</TableCell>
+            <TableCell>{name}</TableCell>
             <TableCell>
-              <label>
-                <input 
-                  type="radio" 
-                  name={attendance.attendance_id}
-                  value="si" 
-                  defaultChecked={status === "si"}
-                />
-                <input 
-                  type="radio" 
-                  name={attendance.attendance_id}
-                  value="no" 
-                  defaultChecked={status === "no"}
-                />
-                <input 
-                  type="radio" 
-                  name={attendance.attendance_id}
-                  value="re" 
-                  defaultChecked={status === "re"}
-                />
-              </label>
+              {renderInputs(attendance_id, subject_id, user_id, status)}
             </TableCell>
           </TableRow>
         );
@@ -50,13 +83,14 @@ export const AttendanceCall = () => {
     <div className="flex flex-col gap-3">
       <Table color={"success"} aria-label="Example static collection table">
         <TableHeader>
-          <TableColumn>user_id</TableColumn>
-          <TableColumn>subject_id</TableColumn>
-          <TableColumn>attendance_id</TableColumn>
-          <TableColumn>si no re</TableColumn>
+          <TableColumn>Estudiante</TableColumn>
+          <TableColumn>Asignatura</TableColumn>
+          <TableColumn>Asistencia</TableColumn>
         </TableHeader>
         <TableBody>{renderAttendance()}</TableBody>
       </Table>
+      <button onClick={()=>{handleSubmit()}}>Enviar</button>
     </div>
   );
 };
+

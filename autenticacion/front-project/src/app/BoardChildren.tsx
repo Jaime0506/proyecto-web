@@ -28,7 +28,7 @@ export const BoardChildren: RouteObject = {
             element: <AttendanceCall />
         },
         {
-            path: 'taskDelivery',
+            path: 'taskDelivery/:taskId',
             element: <TaskDelivery />
         },
         {

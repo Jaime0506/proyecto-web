@@ -1,5 +1,5 @@
-import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister, handleOnLoginAdmin } from "../store/auth/thunk"
-import { FormType,FormTypeA } from "../types/authForms"
+import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister } from "../store/auth/thunk"
+import { FormType } from "../types/authForms"
 
 import { useAppDispatch, useAppSelector } from "./useStore"
 
@@ -24,9 +24,6 @@ export const useAuth = () => {
     const onLogout = () => {
         dispatch(handleOnLogout())
     }
-    const onAdmi = (admi: FormTypeA) => {
-        dispatch(handleOnLoginAdmin(admi))
-    }
 
     return {
         user,
@@ -34,7 +31,6 @@ export const useAuth = () => {
         onLogin,
         onRegister,
         onLogout,
-        onCheckingCurrentUser,
-        onAdmi
+        onCheckingCurrentUser
     }
 }
