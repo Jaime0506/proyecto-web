@@ -4,7 +4,7 @@ import { Image } from "@nextui-org/image"
 import { Input } from "@nextui-org/input"
 import { Link } from "react-router-dom"
 import { validateEmail, validatePassword } from "../../utils/validationEmail"
-import { useAuth } from "../../hooks/useAuth"
+//import { useAuth } from "../../hooks/useAuth"
 
 // Asumiendo que tienes una imagen para la sección administrativa
 import admin_login from '../../assets/login_student.svg'
@@ -28,7 +28,7 @@ const errorsInit: AdminErrorsType = {
 }
 
 export const AdminLoginPage = () => {
-    const { onAdmi } = useAuth()
+    //const { onAdmi } = useAuth()
     const [isVisible, setIsVisible] = useState(false)
     const [formValues, setFormValues] = useState<AdminFormType>({
         email: "",
