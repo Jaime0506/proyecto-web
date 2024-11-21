@@ -100,6 +100,30 @@ export const handleUploadTaskSubmission = (submissionData: { taskId: string; del
   };
 };
 
+export const handleUploadFeedBack = (submissionData: { taskId: string, grade: number, feedback:string }) => {
+    return async (dispatch: AppDispatch) => {
+      try {
+        const { taskId,grade,feedback } = submissionData;
+
+        // Realiza el insert sin el campo file_id
+        const { error } = await supabase
+          .schema("gr7")
+          .from("task")
+          .update({
+            grade,feedback
+          }).eq('task_id', taskId);
+
+        if (error) {
+          console.error("Supabase error:", error);
+          throw error;
+        }
+      } catch (error) {
+        console.error("Error al subir la retroalimentacion: ", error);
+        dispatch({ type: "UPLOAD_TASK_SUBMISSION_FAILURE", error });
+      }
+    };
+};
+
 export const handleOnGetTasks = () => {
   return async (dispatch: AppDispatch) => {
     const { data, error } = await supabase
