@@ -1,4 +1,5 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
+import { Button } from "@nextui-org/button";
 import { useLocation } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { handleOnGetName, handleOnSubmitAttendance } from "../../../store/auth/thunk";
@@ -81,7 +82,8 @@ export const AttendanceCall = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <Table color={"success"} aria-label="Example static collection table">
+      <h1>Asistencia del {date}</h1>
+      <Table aria-label="Example static collection table" selectionMode="single">
         <TableHeader>
           <TableColumn>Estudiante</TableColumn>
           <TableColumn>Asignatura</TableColumn>
@@ -89,7 +91,12 @@ export const AttendanceCall = () => {
         </TableHeader>
         <TableBody>{renderAttendance()}</TableBody>
       </Table>
-      <button onClick={()=>{handleSubmit()}}>Enviar</button>
+      
+      <div className="flex justify-center">
+        <Button color="default" variant="flat" onClick={()=>{handleSubmit()}} className="w-1">
+          Enviar
+        </Button>
+      </div>
     </div>
   );
 };
