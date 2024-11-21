@@ -11,7 +11,6 @@ interface Task {
   description: string;
   due_date: string;
 }
-
 export const Tasks = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -21,8 +20,7 @@ export const Tasks = () => {
   const tasksFromStore: Task[] = useAppSelector((state: RootState) => state.data.tasks) || [];
 
   // Efecto para obtener las tareas cuando se monta el componente
-      dispatch(handleOnGetTasks());
-
+  dispatch(handleOnGetTasks());
 
   // Función para redirigir al formulario de creación de tarea
   const handleCreateTask = () => {
@@ -54,11 +52,17 @@ export const Tasks = () => {
       <div className="mt-4 space-y-6 flex flex-col items-center">
         {sortedTasks.length > 0 ? (
           sortedTasks.map((task) => (
-            <Link to={`/app/board/taskDelivery/${task.task_id}`}>
+            <Link
+              to={
+                userState?.role === "docent"
+                  ? `/app/board/feedback/${task.task_id}`
+                  : `/app/board/taskDelivery/${task.task_id}`
+              }
+              key={task.task_id}
+            >
               <Card
-                key={task.task_id}
                 className="bg-white shadow-lg hover:shadow-xl transition-shadow border border-gray-300 p-4  min-h-[200px] cursor-pointer"
-                style={{width:'900px'}}
+                style={{ width: "900px" }}
               >
                 <CardBody className="flex flex-col h-full">
                   <h3 className="text-xl font-bold mb-2">{task.title}</h3>

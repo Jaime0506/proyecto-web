@@ -76,6 +76,30 @@ export const handleOnCreateTask = (taskData: TaskData) => {
   };
 };
 
+export const handleUploadTaskSubmission = (submissionData: { taskId: string; delivery: string }) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const { taskId, delivery } = submissionData;
+
+      // Realiza el insert sin el campo file_id
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .update({
+          delivery,
+        }).eq('task_id', taskId);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error al subir la tarea:", error);
+      dispatch({ type: "UPLOAD_TASK_SUBMISSION_FAILURE", error });
+    }
+  };
+};
+
 export const handleOnGetTasks = () => {
   return async (dispatch: AppDispatch) => {
     const { data, error } = await supabase

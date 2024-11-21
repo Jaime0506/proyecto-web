@@ -31,7 +31,7 @@ export const BoardChildren: RouteObject = {
             element: <TaskDelivery />
         },
         {
-            path: 'feedback',
+            path: 'feedback/:taskId',
             element: <FeedBack />
         },
         {
