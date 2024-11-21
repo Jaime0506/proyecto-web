@@ -28,7 +28,7 @@ const errorsInit: AdminErrorsType = {
 }
 
 export const AdminLoginPage = () => {
-    //const { onAdmi } = useAuth()
+   // const { onAdmi } = useAuth()
     const [isVisible, setIsVisible] = useState(false)
     const [formValues, setFormValues] = useState<AdminFormType>({
         email: "",
@@ -109,7 +109,7 @@ export const AdminLoginPage = () => {
                                 autoComplete="off"
                                 name="email"
                                 variant="bordered"
-                                radius="none"
+                                radius="none" 
                                 label="Correo administrativo"
                                 type="email"
                                 endContent={

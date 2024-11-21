@@ -11,7 +11,7 @@ import { useAuth } from "../../hooks/useAuth"
 interface FormType {
     email: string
     password: string
-    isAdmin?: boolean
+    is_super_admin?: boolean
 }
 
 interface errorsType {
@@ -30,7 +30,7 @@ export const LoginPage = () => {
     const [formValues, setFormValues] = useState<FormType>({
         email: "",
         password: "",
-        isAdmin: false
+        is_super_admin: true
     });
     const [errors, setErrors] = useState(errorsInit);
 

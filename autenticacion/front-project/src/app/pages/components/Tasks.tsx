@@ -53,8 +53,8 @@ export const Tasks = () => {
       {/* Contenedor de tareas */}
       <div className="mt-4 space-y-6 flex flex-col items-center">
         {sortedTasks.length > 0 ? (
-          sortedTasks.map((task) => (
-            <Link to={`/app/board/taskDelivery/${task.task_id}`}>
+          sortedTasks.map((task, index) => (
+            <Link key={index} to={`/app/board/taskDelivery/${task.task_id}`}>
               <Card
                 key={task.task_id}
                 className="bg-white shadow-lg hover:shadow-xl transition-shadow border border-gray-300 p-4  min-h-[200px] cursor-pointer"
