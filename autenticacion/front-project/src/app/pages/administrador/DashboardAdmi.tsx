@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Card, CardHeader, CardFooter } from '../microdesafios/components/ui/card';
 import { Button } from '../microdesafios/components/ui/button';
@@ -9,14 +9,20 @@ import {
   LogOut 
 } from 'lucide-react';
 
+interface userType {
+  id: number
+  email: string
+  role: string
+}
+
 // Simulated admin users database (in a real app, this would come from a backend)
-const ADMIN_USERS = [
+const ADMIN_USERS: userType[] = [
   { id: 1, email: 'admin1@canvis.com', role: 'superadmin' },
   { id: 2, email: 'admin2@canvis.com', role: 'editor' }
 ];
 
 export const AdminDashboard = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<userType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -75,7 +81,7 @@ export const AdminDashboard = () => {
               <p>Manage user accounts and permissions</p>
          
             <CardFooter>
-              <Button variant="outline">Manage Users</Button>
+              <Button>Manage Users</Button>
             </CardFooter>
           </Card>
 
@@ -88,7 +94,7 @@ export const AdminDashboard = () => {
               <p>View system-wide usage and performance metrics</p>
             
             <CardFooter>
-              <Button variant="outline">View Reports</Button>
+              <Button>View Reports</Button>
             </CardFooter>
           </Card>
 
@@ -101,14 +107,13 @@ export const AdminDashboard = () => {
               <p>Configure system-wide settings and preferences</p>
            
             <CardFooter>
-              <Button variant="outline">Configure</Button>
+              <Button>Configure</Button>
             </CardFooter>
           </Card>
         </div>
 
         <div className="mt-8 text-center">
           <Button 
-            variant="destructive" 
             onClick={handleLogout}
             className="flex items-center gap-2"
           >

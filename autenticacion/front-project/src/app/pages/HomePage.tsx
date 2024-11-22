@@ -6,9 +6,9 @@ import { SubjectsType } from "../../types/redux";
 import { handleOnGetAttendance } from "../../store/auth/thunk";
 import { ListaSalones } from "./asignacion_salones/salones/ListaSalones";
 import FormularioSalon from "./asignacion_salones/salones/FormularioSalones";
-import Dashboard from '../../../../../Dashboard3-main/src/screens/dashboard/DashboardScreen.jsx';
 
 export const HomePage = () => {
+
   const state = useAppSelector((state) => state.data.subjects);
   const dispatch = useAppDispatch();
 
@@ -16,7 +16,7 @@ export const HomePage = () => {
     dispatch(currentSubject(selectedSubject));
     dispatch(handleOnGetAttendance(selectedSubject.subject_id));
   };
-
+  
   const renderCards = () => {
     return state?.map((subject, index) => (
       <Link
@@ -26,7 +26,7 @@ export const HomePage = () => {
           handleOnClick(subject);
         }}
       >
-        <CardComponent subject={subject} />
+        <CardComponent subject={subject}/>
       </Link>
     ));
   };

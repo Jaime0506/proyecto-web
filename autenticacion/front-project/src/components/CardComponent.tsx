@@ -5,6 +5,7 @@ import { SubjectsType } from "../types/redux";
 
 interface CardComponentProps {
   subject: SubjectsType;
+  
 }
 
 export const CardComponent = ({ subject }: CardComponentProps) => {
