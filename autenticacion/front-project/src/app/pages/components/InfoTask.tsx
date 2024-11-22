@@ -1,31 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { handleUpdateTask } from "../../../store/auth/thunk";
+import { handleUpdateTask, handleOnCreateTask } from "../../../store/auth/thunk";
 import { Card, CardBody, Button, Input, Textarea, Spacer } from "@nextui-org/react";
+import { useAuth } from '../../../hooks/useAuth';
 
 interface TaskData {
   task_id: string;
   title: string;
   description: string;
   dueDate: string; // Asegúrate de que coincida con la propiedad 'dueDate'
-  create_by: string; // Asume que tienes esta propiedad
-  subject_id: string; // Asume que tienes esta propiedad
 }
 
 export const InfoTask = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
+
+  const state = useAppSelector((state) => state.data.currentSubject);
+  const { user } = useAuth();
   // Estado local para el formulario de edición
   const [formData, setFormData] = useState<TaskData>({
     task_id: "",
     title: "",
     description: "",
     dueDate: "", // Asegúrate de usar dueDate aquí
-    create_by: "", // Asegúrate de usar create_by aquí
-    subject_id: "", // Asegúrate de usar subject_id aquí
   });
 
   const task = useAppSelector((state) =>
@@ -40,8 +39,6 @@ export const InfoTask = () => {
         title: task.title,
         description: task.description,
         dueDate: task.due_date, // Asegúrate de convertir due_date a dueDate
-        create_by: task.create_by || "", // Asegúrate de manejar esto si es necesario
-        subject_id: task.subject_id || "", // Asegúrate de manejar esto si es necesario
       });
     }
   }, [task]);
@@ -59,14 +56,17 @@ export const InfoTask = () => {
     if (taskId) {
       dispatch(handleUpdateTask(taskId, formData)); // Llamar la acción para actualizar la tarea
       navigate("/app/board/Tasks"); // Redirigir después de guardar los cambios
+      return
     }
+    console.log(formData)
+    dispatch(handleOnCreateTask(formData, user?.id, state?.subject_id));
   };
 
   return (
     <div className="px-4 py-4 bg-white min-h-screen">
       <Card className="max-w-xl mx-auto">
         <CardBody>
-          <h2 className="text-2xl font-bold mb-4">Editar Tarea</h2>
+          <h2 className="text-2xl font-bold mb-4">Tarea</h2>
 
           <Input
             name="title"

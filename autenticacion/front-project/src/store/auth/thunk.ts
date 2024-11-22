@@ -46,9 +46,9 @@ export const handleOnGetName = async  (user_id: string) => {
   return data.name;
 }
 
-export const handleOnCreateTask = (taskData: TaskData) => {
+export const handleOnCreateTask = (taskData: TaskData, user:any, subject_id: any) => {
   return async (dispatch: AppDispatch) => {
-    const { title, description, dueDate, create_by, subject_id } = taskData;
+    const { title, description, dueDate } = taskData;
 
     // Inserción de la tarea en la base de datos de Supabase
     const { data, error } = await supabase
@@ -60,8 +60,8 @@ export const handleOnCreateTask = (taskData: TaskData) => {
           description,
           due_date: dueDate,
           created_at: new Date(),
-          create_by, // Usamos el ID del usuario autenticado
-          subject_id, // Usamos el ID de la asignatura
+          create_by: user,
+          subject_id, 
         },
       ]);
 
@@ -218,10 +218,9 @@ export const handleOnGetTasks = () => {
       console.error("Error loading tasks:", error);
       return []; // Retorna un array vacío en caso de error
     }
-
-    // Despacha las tareas al estado de Redux
-    dispatch(setTasks(data)); // Asegúrate de que 'setTasks' esté correctamente definido en tu dataSlice
-    return data; // Retorna los datos para que se puedan usar si es necesario
+    
+    dispatch(setTasks(data)); 
+    return data; 
   };
 };
 

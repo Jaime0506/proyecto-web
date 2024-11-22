@@ -19,6 +19,10 @@ export const BoardChildren: RouteObject = {
             element: <Attendance />
         },
         {
+            path: 'infoTask',
+            element: <InfoTask />
+        },
+        {
             path: 'infoTask/:taskId',
             element: <InfoTask />
         },

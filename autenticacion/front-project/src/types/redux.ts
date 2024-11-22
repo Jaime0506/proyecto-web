@@ -105,8 +105,6 @@ export interface TaskData {
     title: string;
     description: string;
     dueDate: string;  // Asegúrate de que el campo sea 'dueDate' y no 'due_date'
-    create_by: string;
-    subject_id: string;
   }
 
 // Agregamos `tasks` al `DataType`
