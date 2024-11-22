@@ -18,7 +18,6 @@ export const Tasks = () => {
 
   const userState = useAppSelector((state: RootState) => state.auth.user);
   const state = useAppSelector((state) => state.data.currentSubject);
-  const attendance = useAppSelector((state) => state.data.attendance);
   const tasksFromStore: Task[] = useAppSelector((state: RootState) => state.data.tasks) || [];
 
   useEffect(()=>{
@@ -91,7 +90,7 @@ export const Tasks = () => {
                     </p>
                   </CardBody>
                   <Divider />
-                  <p className="mb-2 text-sm flex-grow">{userState?.name}</p>
+                  <p className="mb-2 text-sm flex-grow">{}</p>
                 </Card>
               </Link>
 
