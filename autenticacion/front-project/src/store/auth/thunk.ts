@@ -1,5 +1,5 @@
 import { supabase } from "../../supabase/supabase";
-import { FormType, FormTypeA } from "../../types/authForms";
+import { FormType } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout, setError } from "./authSlice";
 import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
@@ -19,7 +19,12 @@ export const handleOnGetAttendance = (subject_id: string) => {
   };
 };
 
-export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string, p_status: string, p_date: string) => {
+export const handleOnSubmitAttendance = (
+  p_subject_id: string,
+  p_user_id: string,
+  p_status: string,
+  p_date: string
+) => {
   return async () => {
     const { data, error } = await supabase
       .schema("gr7")
@@ -27,18 +32,18 @@ export const handleOnSubmitAttendance = (p_subject_id: string, p_user_id: string
         p_subject_id,
         p_user_id,
         p_status,
-        p_date
+        p_date,
       });
     console.log(data, error);
-  }
-}
+  };
+};
 
-export const handleOnGetName = async(user_id: string) => {
+export const handleOnGetName = async (user_id: string) => {
   const { data } = await supabase
     .schema("gr7")
-    .rpc("get_user_profile", {user_id});
-    return data.name;
-}
+    .rpc("get_user_profile", { user_id });
+  return data.name;
+};
 
 export const handleOnCreateTask = (taskData: TaskData) => {
   return async (dispatch: AppDispatch) => {
@@ -76,6 +81,131 @@ export const handleOnCreateTask = (taskData: TaskData) => {
   };
 };
 
+export const handleUploadTaskSubmission = (submissionData: {
+  taskId: string;
+  delivery: string;
+}) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const { taskId, delivery } = submissionData;
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .update({
+          delivery,
+        })
+        .eq("task_id", taskId);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error al subir la tarea:", error);
+      dispatch({ type: "UPLOAD_TASK_SUBMISSION_FAILURE", error });
+    }
+  };
+};
+
+export const handleUploadFeedBack = (submissionData: {
+  taskId: string;
+  grade: number;
+  feedback: string;
+}) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const { taskId, grade, feedback } = submissionData;
+
+      // Realiza el insert sin el campo file_id
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .update({
+          grade,
+          feedback,
+        })
+        .eq("task_id", taskId);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error al subir la retroalimentacion: ", error);
+      dispatch({ type: "UPLOAD_TASK_SUBMISSION_FAILURE", error });
+    }
+  };
+};
+export const handleDeleteTask = (taskId: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      // Elimina las entregas asociadas si es necesario
+      const { error: deleteSubmissionsError } = await supabase
+        .schema("gr7")
+        .from("task")
+        .delete()
+        .eq("task_id", taskId);
+
+      if (deleteSubmissionsError) {
+        console.error(
+          "Error al eliminar las entregas asociadas:",
+          deleteSubmissionsError
+        );
+        throw deleteSubmissionsError;
+      }
+
+      // Luego, elimina la tarea
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .delete()
+        .eq("task_id", taskId);
+
+      if (error) {
+        console.error("Error al eliminar la tarea en Supabase:", error);
+        throw error;
+      }
+
+      // Actualiza el estado si es necesario
+      dispatch({ type: "DELETE_TASK_SUCCESS" });
+      dispatch(handleOnGetTasks());
+    } catch (error) {
+      console.error("Error inesperado al eliminar la tarea:", error);
+      dispatch({ type: "DELETE_TASK_FAILURE", error });
+    }
+  };
+};
+
+export const handleUpdateTask = (taskId: string, updatedData: TaskData) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      // Lógica para actualizar la tarea usando updatedData
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .update({
+          title: updatedData.title,
+          description: updatedData.description,
+          due_date: updatedData.dueDate, // Cambia de due_date a dueDate
+        })
+        .eq("task_id", taskId);
+
+      if (error) {
+        console.error("Error al actualizar la tarea:", error);
+        throw error;
+      }
+
+      // Actualiza el estado de Redux si es necesario
+      dispatch({ type: "UPDATE_TASK_SUCCESS" });
+
+      // Actualiza las tareas (si es necesario)
+      dispatch(handleOnGetTasks());
+    } catch (error) {
+      console.error("Error inesperado al actualizar la tarea:", error);
+      dispatch({ type: "UPDATE_TASK_FAILURE", error });
+    }
+  };
+};
 export const handleOnGetTasks = () => {
   return async (dispatch: AppDispatch) => {
     const { data, error } = await supabase
@@ -100,11 +230,13 @@ export const handleOnCheckingCurrentUser = () => {
 
     const { data } = await supabase.auth.getUser();
 
-    const { data: tableSubjects } = await supabase
+    const { data: user_subjects } = await supabase
       .schema("gr7")
-      .from("subjects")
-      .select();
-    dispatch(subjects(tableSubjects));
+      .rpc("get_subjects_by_user", {
+        usersub: data.user?.id,
+      });
+
+    dispatch(subjects(user_subjects));
 
     if (!data.user) {
       dispatch(logout(null));
@@ -117,7 +249,6 @@ export const handleOnCheckingCurrentUser = () => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: data.user.email,
       role: data.user.user_metadata.role,
-      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
       photoURL: data.user.user_metadata.photoURL,
     };
 
@@ -131,9 +262,18 @@ export const handleOnLogin = (user: FormType) => {
 
     const { data, error } = await supabase.auth.signInWithPassword(user);
 
+    const { data: user_subjects } = await supabase
+      .schema("gr7")
+      .rpc("get_subjects_by_user", {
+        usersub: data.user?.id,
+      });
+
+    dispatch(subjects(user_subjects));
+
     if (error) {
       console.log(error);
       dispatch(logout(error));
+
       return;
     }
 
@@ -142,16 +282,12 @@ export const handleOnLogin = (user: FormType) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
-      is_super_admin: data.user.user_metadata.is_super_admin || true, // Validamos aquí
       photoURL: data.user.user_metadata.photoURL,
     };
 
     dispatch(login(userLoged));
-    console.log(userLoged.is_super_admin)
   };
 };
-
-
 export const handleOnRegister = (user: FormType) => {
   return async (dispatch: AppDispatch) => {
     dispatch(checking());
@@ -163,7 +299,6 @@ export const handleOnRegister = (user: FormType) => {
         data: {
           name: null,
           photoURL: null,
-          is_super_admin: true, // Aquí defines si el usuario es admin
         },
       },
     });
@@ -182,7 +317,6 @@ export const handleOnRegister = (user: FormType) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
-      is_super_admin: data.user.user_metadata.is_super_admin || false, // Traemos este valor
       photoURL: null,
     };
 
@@ -226,7 +360,6 @@ export const handleOnSetName = (name: string) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: data.user.email,
       role: data.user.user_metadata.role,
-      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
       photoURL: null,
     };
 
@@ -243,48 +376,5 @@ export const handleOnUploadPhoto = (file: File, user: UserType) => {
     if (resposne?.error) {
       dispatch(setError(resposne.error));
     }
-  };
-};
-
-export const handleOnLoginAdmin = (user: FormTypeA) => {
-  return async (dispatch: AppDispatch) => {
-    dispatch(checking());
-
-    // Intentar iniciar sesión
-    const { data, error } = await supabase.auth.signInWithPassword(user);
-
-    if (error) {
-      console.log(error);
-      dispatch(logout(null));
-
-      return;
-    }
-
-    // Si el inicio de sesión es exitoso, verificar si el usuario está en la tabla "administrativo"
-    const { data: adminData, error: adminError } = await supabase
-      .schema("public")
-      .from("administrativo")
-      .select()
-      .eq("user_id", data.user.id)
-      .single(); // single() asegura que solo se espera un resultado
-
-    if (adminError || !adminData) {
-      console.log("No es un administrador o hubo un error:", adminError);
-      dispatch(logout(null));
-
-      return;
-    }
-
-    // Crear el objeto del usuario administrador logueado
-    const userLoged = {
-      id: data.user.id,
-      name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
-      email: data.user.email,
-      photoURL: null,
-      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
-      role: "admin", // Asignar un rol específico para administradores
-    };
-
-    dispatch(login(userLoged));
   };
 };

@@ -1,102 +1,114 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { handleOnCreateTask } from '../../../store/auth/thunk';  // Importamos la función
-import { RootState, AppDispatch } from '../../../store/store';
-import { TaskData } from '../../../types/redux';  // Importa el tipo TaskData desde el archivo de tipos
-import { Input, Textarea, Button, Spacer, Card } from '@nextui-org/react'; // Eliminamos el Text de NextUI
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { handleUpdateTask } from "../../../store/auth/thunk";
+import { Card, CardBody, Button, Input, Textarea, Spacer } from "@nextui-org/react";
+
+interface TaskData {
+  task_id: string;
+  title: string;
+  description: string;
+  dueDate: string; // Asegúrate de que coincida con la propiedad 'dueDate'
+  create_by: string; // Asume que tienes esta propiedad
+  subject_id: string; // Asume que tienes esta propiedad
+}
 
 export const InfoTask = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [error, setError] = useState<string | null>(null); // Para manejar errores
-  const dispatch = useDispatch<AppDispatch>();
+  const { taskId } = useParams<{ taskId: string }>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  
+  // Estado local para el formulario de edición
+  const [formData, setFormData] = useState<TaskData>({
+    task_id: "",
+    title: "",
+    description: "",
+    dueDate: "", // Asegúrate de usar dueDate aquí
+    create_by: "", // Asegúrate de usar create_by aquí
+    subject_id: "", // Asegúrate de usar subject_id aquí
+  });
 
-  // Obtener los datos del usuario y asignatura desde el estado de Redux
-  const userId = useSelector((state: RootState) => state.auth.user?.id);
-  const subjectId = useSelector((state: RootState) => state.data.currentSubject?.subject_id);
+  const task = useAppSelector((state) =>
+    state.data.tasks.find((task) => task.task_id === taskId)
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title || !description || !dueDate) {
-      setError("Por favor, complete todos los campos.");
-      return;
-    }
-
-    if (!userId || !subjectId) {
-      console.error('Falta el ID del usuario o de la asignatura');
-      return;
-    }
-
-    // Crear el objeto newTask que será enviado al backend
-    const newTask: TaskData = {
-      title,
-      description,
-      dueDate,  // Asegúrate de que el campo sea 'dueDate'
-      create_by: userId, // Usuario que crea la tarea
-      subject_id: subjectId, // ID de la asignatura
-    };
-
-    console.log('Datos a enviar:', newTask);
-
-    // Despachar la acción para crear la tarea en la base de datos y actualizar el estado
-    dispatch(handleOnCreateTask(newTask))
-      .then(() => {
-        navigate('/app/board/tasks'); // Redirige tras crear la tarea
-      })
-      .catch((error) => {
-        console.error("Error al crear la tarea:", error);
-        setError("Hubo un error al crear la tarea. Intenta nuevamente.");
+  // Cargar la tarea cuando el componente se monta
+  useEffect(() => {
+    if (task) {
+      setFormData({
+        task_id: task.task_id,
+        title: task.title,
+        description: task.description,
+        dueDate: task.due_date, // Asegúrate de convertir due_date a dueDate
+        create_by: task.create_by || "", // Asegúrate de manejar esto si es necesario
+        subject_id: task.subject_id || "", // Asegúrate de manejar esto si es necesario
       });
+    }
+  }, [task]);
+
+  // Función para manejar cambios en los campos del formulario
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Función para guardar los cambios
+  const handleSave = () => {
+    if (taskId) {
+      dispatch(handleUpdateTask(taskId, formData)); // Llamar la acción para actualizar la tarea
+      navigate("/app/board/Tasks"); // Redirigir después de guardar los cambios
+    }
   };
 
   return (
-    <Card style={{ padding: '20px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-      <h3>Crea una nueva tarea</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '16px' }}>
+    <div className="px-4 py-4 bg-white min-h-screen">
+      <Card className="max-w-xl mx-auto">
+        <CardBody>
+          <h2 className="text-2xl font-bold mb-4">Editar Tarea</h2>
+
           <Input
-            fullWidth
+            name="title"
             label="Título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            className="mb-4"
           />
-        </div>
 
-        <div style={{ marginBottom: '16px' }}>
           <Textarea
-            fullWidth
+            name="description"
             label="Descripción"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={5}
-            required
-          />
-        </div>
-
-        <div style={{ marginBottom: '16px' }}>
-          <Input
+            value={formData.description}
+            onChange={handleChange}
             fullWidth
-            type="date"
-            label="Fecha de entrega"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
+            rows={6}
+            className="mb-4"
           />
-        </div>
 
-        <Spacer y={1} />
+          <Input
+            name="dueDate" // Cambia 'due_date' a 'dueDate'
+            label="Fecha de Entrega"
+            type="date"
+            value={formData.dueDate}
+            onChange={handleChange}
+            fullWidth
+            className="mb-4"
+          />
 
-        <Button type="submit" color="primary" size="lg" fullWidth>
-          Crear tarea
-        </Button>
-      </form>
-    </Card>
+          <Spacer y={1} />
+
+          <div className="flex justify-between">
+            <Button onClick={() => navigate("/app/board/Tasks")} color="secondary">
+              Cancelar
+            </Button>
+            <Button onClick={handleSave} color="primary">
+              Guardar
+            </Button>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 };
