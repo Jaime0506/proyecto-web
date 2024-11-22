@@ -80,8 +80,6 @@ export const handleUploadTaskSubmission = (submissionData: { taskId: string; del
   return async (dispatch: AppDispatch) => {
     try {
       const { taskId, delivery } = submissionData;
-
-      // Realiza el insert sin el campo file_id
       const { error } = await supabase
         .schema("gr7")
         .from("task")
@@ -123,6 +121,47 @@ export const handleUploadFeedBack = (submissionData: { taskId: string, grade: nu
       }
     };
 };
+
+export const handleDeleteTask = (taskId: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      // Elimina las entregas asociadas a la tarea, si existen
+      const { error: deleteSubmissionsError } = await supabase
+        .schema("gr7")
+        .from("task")  // Suponiendo que la tabla de entregas es "task_submission"
+        .delete()
+        .eq("task_id", taskId);
+
+      if (deleteSubmissionsError) {
+        console.error("Error al eliminar las entregas asociadas:", deleteSubmissionsError);
+        throw deleteSubmissionsError;
+      }
+
+      // Luego, elimina la tarea
+      const { error } = await supabase
+        .schema("gr7")
+        .from("task")
+        .delete()
+        .eq('task_id', taskId);
+
+      if (error) {
+        console.error("Error al eliminar la tarea en Supabase:", error);
+        throw error;
+      }
+
+      // Si la eliminación fue exitosa, actualiza el estado con las tareas restantes
+      dispatch({ type: "DELETE_TASK_SUCCESS" });
+
+      // Actualiza la lista de tareas
+      dispatch(handleOnGetTasks());
+
+    } catch (error) {
+      console.error("Error inesperado al eliminar la tarea:", error);
+      dispatch({ type: "DELETE_TASK_FAILURE", error });
+    }
+  };
+};
+
 
 export const handleOnGetTasks = () => {
   return async (dispatch: AppDispatch) => {
