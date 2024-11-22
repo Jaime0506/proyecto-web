@@ -1,16 +1,11 @@
 import { useState } from 'react';
-import { uploadFile } from '../../utils/uploadFiles';
 import { useAuth } from '../../hooks/useAuth';
 
 import default_photo from '../../assets/default_photo.svg'
-import { useAppSelector } from '../../hooks';
-import { toast } from 'react-toastify';
 
 export const SettingsPage = () => {
 
-    const error = useAppSelector(state => state.auth.error)
-
-    const { user, onSetName } = useAuth()
+    const { user, onSetName, onSetPhoto } = useAuth()
 
     const [isEditing, setIsEditing] = useState(false);
     const [tempImage, setTempImage] = useState<string | null>(null); // Estado para la imagen temporal
@@ -32,35 +27,14 @@ export const SettingsPage = () => {
     };
 
     const handleOnSubmitChanges = async () => {
+        if (!user) return
+
         if (selectedFile) {
-            const publicUrl = await uploadFile(selectedFile, user?.id); // Reemplaza con el ID real del usuario
-            if (publicUrl) {
-                console.log("URL de imagen pública:", publicUrl);
-                setTempImage(null); // Restablecer el estado temporal
-                setSelectedFile(null); // Limpiar el archivo seleccionado
-            } else {
-                toast.error("No se pudo obtener la URL pública de la imagen.", {
-                    position: 'bottom-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    theme: 'light'
-                });
-            }
+            onSetPhoto(selectedFile, user)
         }
 
         if (name) {
             onSetName(name)
-        }
-
-        if (!error) {
-            toast.success('Todos los cambios guardados con exito', {
-                position: 'bottom-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                theme: 'light'
-            })
         }
 
         setIsEditing(false)
@@ -72,7 +46,8 @@ export const SettingsPage = () => {
 
             <div className="bg-white shadow rounded-lg p-6 mb-6 flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                    <img src={user?.photoURL ? '' : default_photo} alt="Profile" className="w-40 h-40 rounded-full object-cover" />
+                    <img src={user?.photoURL ? user.photoURL : default_photo} alt="Profile" className="w-40 h-40 rounded-full object-cover" />
+                    {/* <img src={''} alt="Profile" className="w-40 h-40 rounded-full object-cover" /> */}
                     <div>
                         <p className="text-lg font-semibold">{user?.name ?? 'Invitado'}</p>
                         <p className="text-gray-600">{user?.role ?? 'Estudiante'}</p>

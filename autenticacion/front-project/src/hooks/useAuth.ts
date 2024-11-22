@@ -1,5 +1,6 @@
-import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister, handleOnSetName } from "../store/auth/thunk"
+import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister, handleOnSetName, handleOnUploadPhoto } from "../store/auth/thunk"
 import { FormType } from "../types/authForms"
+import { UserType } from "../types/redux"
 
 import { useAppDispatch, useAppSelector } from "./useStore"
 
@@ -29,6 +30,10 @@ export const useAuth = () => {
         dispatch(handleOnSetName(name))
     }
 
+    const onSetPhoto = (file: File, user: UserType) => {
+        dispatch(handleOnUploadPhoto(file, user))
+    }
+
     return {
         user,
 
@@ -36,6 +41,7 @@ export const useAuth = () => {
         onRegister,
         onLogout,
         onCheckingCurrentUser,
-        onSetName
+        onSetName,
+        onSetPhoto
     }
 }

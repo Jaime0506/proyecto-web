@@ -5,6 +5,7 @@ import { checking, login, logout, setError } from "./authSlice";
 import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
 import { UserType, TaskData } from "../../types/redux";
 import { uploadFile } from "../../utils/uploadFiles";
+import { toast } from "react-toastify";
 
 export const handleOnGetAttendance = (subject_id: string) => {
   return async (dispatch: AppDispatch) => {
@@ -38,12 +39,12 @@ export const handleOnSubmitAttendance = (
   };
 };
 
-export const handleOnGetName = async (user_id: string) => {
+export const handleOnGetName = async  (user_id: string) => {
   const { data } = await supabase
     .schema("gr7")
     .rpc("get_user_profile", { user_id });
   return data.name;
-};
+}
 
 export const handleOnCreateTask = (taskData: TaskData) => {
   return async (dispatch: AppDispatch) => {
@@ -364,17 +365,58 @@ export const handleOnSetName = (name: string) => {
     };
 
     dispatch(login(userLoged));
+
+    toast.success('Todos los cambios guardados con exito', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: 'light'
+    })
   };
 };
 
 export const handleOnUploadPhoto = (file: File, user: UserType) => {
   return async (dispatch: AppDispatch) => {
-    const resposne = await uploadFile(file, user?.id);
+    const response = await uploadFile(file, user?.id);
 
-    //const errorMod = {...resposne?.error}
+    if (response?.error) {
+      dispatch(setError(response.error));
 
-    if (resposne?.error) {
-      dispatch(setError(resposne.error));
+      return
     }
+
+    if (!response?.publicURL) {
+      console.log("Error uwu")
+
+      return
+    }
+
+    const { data } = await supabase.auth.updateUser({
+      data: {
+        photoURL: response?.publicURL
+      }
+    })
+
+    if (!data.user) return
+
+    const userLoged: UserType = {
+      id: data.user.id,
+      name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
+      email: data.user.email,
+      role: data.user.user_metadata.role,
+      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
+      photoURL: response?.publicURL ? response.publicURL : null,
+    };
+
+    dispatch(login(userLoged))
+
+    toast.success('Todos los cambios guardados con exito', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: 'light'
+    })
   };
 };
