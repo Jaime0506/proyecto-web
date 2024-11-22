@@ -82,12 +82,12 @@ export interface DataType {
 /// Funcionamiento para modulo de microdesafios
 
 export interface MissionType {
-    id: string;
+    id: number;
     name: string;
     description: string;
-    points: number;
-    day: string;
-    schedule: string;
+    points?: number;
+    day?: string;
+    schedule?: string;
   }
   
 

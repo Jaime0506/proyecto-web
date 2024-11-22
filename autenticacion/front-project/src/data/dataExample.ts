@@ -180,5 +180,6 @@ export const userExample: UserType = {
     email: "ejemplo@gmail.com",
     name: "Pepe",
     role: "role",
-    photoURL: null
+    photoURL: null,
+    is_super_admin: false
 }
