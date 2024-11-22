@@ -38,7 +38,7 @@ export interface UserType {
     name: string | null
     email: string | undefined
     role: string | undefined
-    is_super_admin: boolean 
+    is_super_admin?: boolean 
     photoURL: string | null
 }
 
