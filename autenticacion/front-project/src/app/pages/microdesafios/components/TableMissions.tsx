@@ -1,4 +1,3 @@
-// TableMissions.tsx
 import React from 'react';
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/table";
 import { MissionType } from "../../../../types/redux";

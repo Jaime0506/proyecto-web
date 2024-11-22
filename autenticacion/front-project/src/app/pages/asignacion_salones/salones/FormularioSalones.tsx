@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState } from 'react'
 import { crearSalon } from '../../../../supabase/supabase'
 import { Button } from "../../microdesafios/components/ui/button"
@@ -8,8 +6,6 @@ import { Checkbox } from "../../microdesafios/components/ui/Checkbox"
 import { Label } from "../../microdesafios/components/ui/Label"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../../microdesafios/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../microdesafios/components/ui/select"
-
-
 
 export default function FormularioSalon() {
   const [isPending, setIsPending] = useState(false)
