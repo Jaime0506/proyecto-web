@@ -137,7 +137,7 @@ export const handleUploadFeedBack = (submissionData: {
     }
   };
 };
-export const handleDeleteTask = (taskId: string) => {
+export const handleDeleteTask = (taskId: string, create_by: any, subject_id: any) => {
   return async (dispatch: AppDispatch) => {
     try {
       // Elimina las entregas asociadas si es necesario
@@ -169,7 +169,7 @@ export const handleDeleteTask = (taskId: string) => {
 
       // Actualiza el estado si es necesario
       dispatch({ type: "DELETE_TASK_SUCCESS" });
-      dispatch(handleOnGetTasks());
+      dispatch(handleOnGetTasks(create_by, subject_id));
     } catch (error) {
       console.error("Error inesperado al eliminar la tarea:", error);
       dispatch({ type: "DELETE_TASK_FAILURE", error });
@@ -177,7 +177,7 @@ export const handleDeleteTask = (taskId: string) => {
   };
 };
 
-export const handleUpdateTask = (taskId: string, updatedData: TaskData) => {
+export const handleUpdateTask = (taskId: string, updatedData: TaskData, create_by: any, subject_id: any) => {
   return async (dispatch: AppDispatch) => {
     try {
       // Lógica para actualizar la tarea usando updatedData
@@ -200,25 +200,43 @@ export const handleUpdateTask = (taskId: string, updatedData: TaskData) => {
       dispatch({ type: "UPDATE_TASK_SUCCESS" });
 
       // Actualiza las tareas (si es necesario)
-      dispatch(handleOnGetTasks());
+      dispatch(handleOnGetTasks(create_by, subject_id));
     } catch (error) {
       console.error("Error inesperado al actualizar la tarea:", error);
       dispatch({ type: "UPDATE_TASK_FAILURE", error });
     }
   };
 };
-export const handleOnGetTasks = () => {
+
+export const handleGetTaskDocent = (subject_id: any) => {
   return async (dispatch: AppDispatch) => {
     const { data, error } = await supabase
       .schema("gr7")
       .from("task")
-      .select("*");
+      .select()
+      .eq("subject_id", subject_id);
+    console.log(data, error);
 
     if (error) {
       console.error("Error loading tasks:", error);
       return []; // Retorna un array vacío en caso de error
     }
     
+    dispatch(setTasks(data)); 
+  }
+}
+
+export const handleOnGetTasks = (created_by: any, subject:any) => {
+  return async (dispatch: AppDispatch) => {
+    const { data, error } = await supabase
+      .schema("gr7")
+      .rpc('get_tasks_by_user', {created_by, subject})
+
+    if (error) {
+      console.error("Error loading tasks:", error);
+      return []; // Retorna un array vacío en caso de error
+    }
+
     dispatch(setTasks(data)); 
     return data; 
   };

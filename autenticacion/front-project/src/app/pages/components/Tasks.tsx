@@ -1,8 +1,9 @@
-import { handleOnGetTasks, handleDeleteTask } from "../../../store/auth/thunk";
+import { handleOnGetTasks, handleDeleteTask, handleGetTaskDocent } from "../../../store/auth/thunk";
 import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../../../store";
 import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { Card, CardBody, Divider, Button } from "@nextui-org/react";
+import { useEffect } from "react";
 
 interface Task {
   task_id: string;
@@ -16,11 +17,19 @@ export const Tasks = () => {
   const dispatch = useAppDispatch();
 
   const userState = useAppSelector((state: RootState) => state.auth.user);
+  const state = useAppSelector((state) => state.data.currentSubject);
+  const attendance = useAppSelector((state) => state.data.attendance);
   const tasksFromStore: Task[] = useAppSelector((state: RootState) => state.data.tasks) || [];
 
-  // Efecto para obtener las tareas cuando se monta el componente
-  dispatch(handleOnGetTasks());
-
+  useEffect(()=>{
+    if(!(userState?.role === "docent")){
+    dispatch(handleOnGetTasks(userState?.id, state?.subject_id));
+    console.log('hsisjsj')
+  } else {
+    dispatch(handleGetTaskDocent(state?.subject_id))
+  }},[])
+  
+  
   const handleCreateTask = () => {
     navigate("/app/board/InfoTask"); // Ruta para crear tarea
   };
@@ -28,7 +37,7 @@ export const Tasks = () => {
   // Función para eliminar tarea
   const handleDelete = (taskId: string) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta tarea?")) {
-      dispatch(handleDeleteTask(taskId));
+      dispatch(handleDeleteTask(taskId, userState?.id, state?.subject_id));
     }
   };
 
@@ -82,6 +91,7 @@ export const Tasks = () => {
                     </p>
                   </CardBody>
                   <Divider />
+                  <p className="mb-2 text-sm flex-grow">{userState?.name}</p>
                 </Card>
               </Link>
 

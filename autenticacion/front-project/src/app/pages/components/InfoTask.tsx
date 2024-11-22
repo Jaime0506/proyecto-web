@@ -18,6 +18,7 @@ export const InfoTask = () => {
   const navigate = useNavigate();
 
   const state = useAppSelector((state) => state.data.currentSubject);
+  const attendance = useAppSelector((state) => state.data.attendance);
   const { user } = useAuth();
   // Estado local para el formulario de edición
   const [formData, setFormData] = useState<TaskData>({
@@ -54,12 +55,11 @@ export const InfoTask = () => {
   // Función para guardar los cambios
   const handleSave = () => {
     if (taskId) {
-      dispatch(handleUpdateTask(taskId, formData)); // Llamar la acción para actualizar la tarea
+      dispatch(handleUpdateTask(taskId, formData, user?.id, state?.subject_id)); // Llamar la acción para actualizar la tarea
       navigate("/app/board/Tasks"); // Redirigir después de guardar los cambios
       return
     }
-    console.log(formData)
-    dispatch(handleOnCreateTask(formData, user?.id, state?.subject_id));
+    attendance?.map((elem)=>{dispatch(handleOnCreateTask(formData, elem.user_id, elem.subject_id));})
   };
 
   return (

@@ -11,25 +11,27 @@ export const FeedBack = () => {
 
   // Estados para guardar los datos
   const [feedback, setFeedback] = useState("");
+  const [delivery, setDelivery] = useState("");
   const [grade, setGrade] = useState<number | "">("");
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false); // Indica si ya existe retroalimentación previa
 
   useEffect(() => {
     const fetchTaskDetails = async () => {
-      if (!taskId) return;
+      // if (!taskId) return;
 
       const { data, error } = await supabase
         .schema("gr7")
         .from("task")
-        .select("feedback, grade")
+        .select("feedback, grade, delivery")
         .eq("task_id", taskId)
         .single();
-
+       
       if (error) {
         console.error("Error al obtener los detalles de la tarea:", error);
         return;
       }
 
+      setDelivery(data.delivery)
       // Si hay feedback y calificación, los mostramos como predeterminados
       if (data?.feedback || data?.grade !== null) {
         setFeedback(data.feedback || "");
@@ -39,7 +41,7 @@ export const FeedBack = () => {
     };
 
     fetchTaskDetails();
-  }, [taskId]);
+  }, []);
 
   const handleSubmit = () => {
     if (!taskId) {
@@ -61,8 +63,7 @@ export const FeedBack = () => {
   return (
     <div className="px-4 py-4 bg-gray-100 min-h-screen flex flex-col items-center">
       <h2 className="text-2xl font-bold mb-4">Retroalimentación de tarea</h2>
-      
-
+      <h1>Entrega: {delivery}</h1>
       <Card className="bg-white shadow-lg p-4 w-full max-w-md">
         <Input
           type="number"
