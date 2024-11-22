@@ -38,6 +38,7 @@ export interface UserType {
     name: string | null
     email: string | undefined
     role: string | undefined
+    is_super_admin: boolean 
     photoURL: string | null
 }
 
@@ -77,6 +78,19 @@ export interface DataType {
     currentSubject: SubjectsType | null
 }
 
+
+/// Funcionamiento para modulo de microdesafios
+
+export interface MissionType {
+    id: string;
+    name: string;
+    description: string;
+    points: number;
+    day: string;
+    schedule: string;
+  }
+  
+
 export interface TaskType {
     task_id: string;
     title: string;
@@ -102,3 +116,4 @@ export interface DataType {
     currentSubject: SubjectsType | null;
     tasks: TaskType[]; // Nueva propiedad para almacenar tareas
 }
+

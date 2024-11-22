@@ -1,6 +1,7 @@
 import { Navigate, RouteObject } from "react-router-dom";
 import { News, Tasks, Attendance, InfoTask, AttendanceCall, TaskDelivery, FeedBack } from "./pages/components";
 import { Board, Subjects } from "./pages/estudent";
+import  Missions  from "./pages/microdesafios/mision";
 
 export const BoardChildren: RouteObject = {
     path: 'board',
@@ -41,6 +42,11 @@ export const BoardChildren: RouteObject = {
         {
             path: '*',
             element: <Navigate to={'board'} />
+        },
+        {
+            path: 'missions',
+            element: <Missions />
+
         }
     ]
 }

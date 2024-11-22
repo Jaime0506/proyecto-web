@@ -94,7 +94,11 @@
                                 </ul>
                             </td>
                             <td class="actions-cell">
+<<<<<<< HEAD
+                                <button onclick="window.location.href='{{ url_for(editar_asignacion, id=asignacion.id) }}'" class="action-btn edit-btn">
+=======
                                 <button onclick="window.location.href='{{ url_for('editar_asignacion', id=asignacion.id) }}'" class="action-btn edit-btn">
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
                                     Editar
                                 </button>
                                 <form method="POST" action="{{ url_for('eliminar_asignacion', id=asignacion.id) }}" class="inline-form">

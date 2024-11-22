@@ -11,15 +11,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@nextui-org/button";
 import { useAuth } from "../hooks/useAuth";
 
-import accountLogo from '../assets/account.svg'
+import accountLogo from "../assets/account.svg";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const { onLogout } = useAuth();
 
   const handleOnClick = () => {
-    console.log("Me llamaron aro");
-    navigate("");
+    console.log("Navegando a Home");
+    navigate("/");
   };
 
   return (
@@ -32,14 +32,24 @@ export default function NavBar() {
         <p className="font-bold font-roboto text-3xl">Canvis</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-3" justify="center">
-        <NavbarItem className="flex flex-col">
-          <Link to={'settings'} className="">
-            <Image 
-              width={35}
-              src={accountLogo}
-            />
+        {/* Icono de cuenta */}
+        <NavbarItem>
+          <Link to="settings">
+            <Image width={35} src={accountLogo} />
           </Link>
         </NavbarItem>
+        {/* Botón para ir a Misiones */}
+        <NavbarItem>
+          <Button
+            variant="ghost"
+            color="primary"
+            className="text-lg"
+            onClick={() => navigate("/app/misiones")}
+          >
+            Ir a Misiones
+          </Button>
+        </NavbarItem>
+        {/* Botón de cerrar sesión */}
         <NavbarItem>
           <Button
             variant="ghost"
@@ -47,7 +57,7 @@ export default function NavBar() {
             className="text-lg"
             onClick={onLogout}
           >
-            Cerrar sesion
+            Cerrar sesión
           </Button>
         </NavbarItem>
       </NavbarContent>

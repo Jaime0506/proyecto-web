@@ -55,6 +55,8 @@ class Mensaje(db.Model):
     remitente = db.relationship('Usuario', foreign_keys=[remitente_id], backref=db.backref('mensajes_enviados', lazy=True))
     destinatario = db.relationship('Usuario', foreign_keys=[destinatario_id], backref=db.backref('mensajes_recibidos', lazy=True))
 
+<<<<<<< HEAD
+=======
 
 class calendario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -79,6 +81,7 @@ class editar_asignacion(db.Model):
 
 
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
@@ -148,11 +151,19 @@ def register():
         username = request.form['username']
         password = request.form['password']
         rol = request.form['rol']
+<<<<<<< HEAD
+        
+        if Usuario.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe', 'error')
+            return redirect(url_for('register'))
+        
+=======
 
         if Usuario.query.filter_by(username=username).first():
             flash('El nombre de usuario ya existe', 'error')
             return redirect(url_for('register'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
         hashed_password = generate_password_hash(password)
         new_user = Usuario(username=username, password=hashed_password, rol=rol)
         db.session.add(new_user)
@@ -202,22 +213,38 @@ def asignar_profesor():
     salon_id = request.form['salon_id']
     fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%dT%H:%M')
     fecha_fin = datetime.strptime(request.form['fecha_fin'], '%Y-%m-%dT%H:%M')
+<<<<<<< HEAD
+    
+    if fecha_inicio >= fecha_fin:
+        flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
+        return redirect(url_for('admin_dashboard'))
+    
+=======
 
     if fecha_inicio >= fecha_fin:
         flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
         return redirect(url_for('admin_dashboard'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si el salón está disponible
     asignaciones_existentes = Asignacion.query.filter_by(salon_id=salon_id).filter(
         ((Asignacion.fecha_inicio <= fecha_inicio) & (Asignacion.fecha_fin > fecha_inicio)) |
         ((Asignacion.fecha_inicio < fecha_fin) & (Asignacion.fecha_fin >= fecha_fin)) |
         ((Asignacion.fecha_inicio >= fecha_inicio) & (Asignacion.fecha_fin <= fecha_fin))
     ).all()
+<<<<<<< HEAD
+    
+    if asignaciones_existentes:
+        flash('El salón no está disponible en ese horario', 'error')
+        return redirect(url_for('admin_dashboard'))
+    
+=======
 
     if asignaciones_existentes:
         flash('El salón no está disponible en ese horario', 'error')
         return redirect(url_for('admin_dashboard'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si hay conflicto de horario para el profesor
     if hay_conflicto_horario(profesor_id, fecha_inicio, fecha_fin):
         flash('El profesor tiene un conflicto de horario', 'error')
@@ -236,22 +263,38 @@ def asignar_salon():
     salon_id = request.form['salon_id']
     fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%dT%H:%M')
     fecha_fin = datetime.strptime(request.form['fecha_fin'], '%Y-%m-%dT%H:%M')
+<<<<<<< HEAD
+    
+    if fecha_inicio >= fecha_fin:
+        flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
+        return redirect(url_for('profesor_dashboard'))
+    
+=======
 
     if fecha_inicio >= fecha_fin:
         flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
         return redirect(url_for('profesor_dashboard'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si el salón está disponible
     asignaciones_existentes = Asignacion.query.filter_by(salon_id=salon_id).filter(
         ((Asignacion.fecha_inicio <= fecha_inicio) & (Asignacion.fecha_fin > fecha_inicio)) |
         ((Asignacion.fecha_inicio < fecha_fin) & (Asignacion.fecha_fin >= fecha_fin)) |
         ((Asignacion.fecha_inicio >= fecha_inicio) & (Asignacion.fecha_fin <= fecha_fin))
     ).all()
+<<<<<<< HEAD
+    
+    if asignaciones_existentes:
+        flash('El salón no está disponible en ese horario', 'error')
+        return redirect(url_for('profesor_dashboard'))
+    
+=======
 
     if asignaciones_existentes:
         flash('El salón no está disponible en ese horario', 'error')
         return redirect(url_for('profesor_dashboard'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si hay conflicto de horario para el profesor
     if hay_conflicto_horario(current_user.id, fecha_inicio, fecha_fin):
         flash('Usted tiene un conflicto de horario', 'error')
@@ -274,19 +317,31 @@ def asignar_estudiante():
     if not estudiante or estudiante.rol != 'estudiante':
         flash('Estudiante no válido', 'error')
         return redirect(url_for('admin_dashboard'))
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si el estudiante ya tiene 6 asignaciones
     asignaciones_estudiante = AsignacionEstudiante.query.filter_by(estudiante_id=estudiante_id).count()
     if asignaciones_estudiante >= 6:
         flash('El estudiante ya tiene el máximo de 6 asignaciones', 'error')
         return redirect(url_for('admin_dashboard'))
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si el estudiante ya está asignado a esta clase
     asignacion_existente = AsignacionEstudiante.query.filter_by(estudiante_id=estudiante_id, asignacion_id=asignacion_id).first()
     if asignacion_existente:
         flash('El estudiante ya está asignado a esta clase', 'error')
         return redirect(url_for('admin_dashboard'))
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     # Verificar si hay conflicto de horario para el estudiante
     asignacion = Asignacion.query.get(asignacion_id)
     if hay_conflicto_horario(estudiante_id, asignacion.fecha_inicio, asignacion.fecha_fin):
@@ -309,11 +364,19 @@ def editar_asignacion(id):
         profesor_id = request.form['profesor_id']
         fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%dT%H:%M')
         fecha_fin = datetime.strptime(request.form['fecha_fin'], '%Y-%m-%dT%H:%M')
+<<<<<<< HEAD
+        
+        if fecha_inicio >= fecha_fin:
+            flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
+            return redirect(url_for('editar_asignacion', id=id))
+        
+=======
 
         if fecha_inicio >= fecha_fin:
             flash('La fecha de inicio debe ser anterior a la fecha de fin', 'error')
             return redirect(url_for('editar_asignacion', id=id))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
         # Verificar si el salón está disponible (excluyendo la asignación actual)
         asignaciones_existentes = Asignacion.query.filter(
             Asignacion.salon_id == salon_id,
@@ -322,25 +385,45 @@ def editar_asignacion(id):
             ((Asignacion.fecha_inicio < fecha_fin) & (Asignacion.fecha_fin >= fecha_fin)) |
             ((Asignacion.fecha_inicio >= fecha_inicio) & (Asignacion.fecha_fin <= fecha_fin))
         ).all()
+<<<<<<< HEAD
+        
+        if asignaciones_existentes:
+            flash('El salón no está disponible en ese horario', 'error')
+            return redirect(url_for('editar_asignacion', id=id))
+        
+=======
 
         if asignaciones_existentes:
             flash('El salón no está disponible en ese horario', 'error')
             return redirect(url_for('editar_asignacion', id=id))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
         # Verificar si hay conflicto de horario para el profesor (excluyendo la asignación actual)
         if hay_conflicto_horario(profesor_id, fecha_inicio, fecha_fin, exclude_id=id):
             flash('El profesor tiene un conflicto de horario', 'error')
             return redirect(url_for('editar_asignacion', id=id))
+<<<<<<< HEAD
+        
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
         asignacion.salon_id = salon_id
         asignacion.profesor_id = profesor_id
         asignacion.fecha_inicio = fecha_inicio
         asignacion.fecha_fin = fecha_fin
+<<<<<<< HEAD
+        
+        db.session.commit()
+        flash('Asignación actualizada correctamente', 'success')
+        return redirect(url_for('admin_dashboard'))
+    
+=======
 
         db.session.commit()
         flash('Asignación actualizada correctamente', 'success')
         return redirect(url_for('admin_dashboard'))
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     salones = Salon.query.all()
     profesores = Usuario.query.filter_by(rol='profesor').all()
     return render_template('editar_asignacion.html', asignacion=asignacion, salones=salones, profesores=profesores)
@@ -353,10 +436,17 @@ def editar_asignacion(id):
 @admin_required
 def eliminar_asignacion(id):
     asignacion = Asignacion.query.get_or_404(id)
+<<<<<<< HEAD
+    
+    # Eliminar todas las asignaciones de estudiantes relacionadas
+    AsignacionEstudiante.query.filter_by(asignacion_id=id).delete()
+    
+=======
 
     # Eliminar todas las asignaciones de estudiantes relacionadas
     AsignacionEstudiante.query.filter_by(asignacion_id=id).delete()
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     db.session.delete(asignacion)
     db.session.commit()
     flash('Asignación eliminada correctamente', 'success')
@@ -434,10 +524,17 @@ def hay_conflicto_horario(usuario_id, fecha_inicio, fecha_fin, exclude_id=None):
         ((Asignacion.fecha_inicio < fecha_fin) & (Asignacion.fecha_fin >= fecha_fin)) |
         ((Asignacion.fecha_inicio >= fecha_inicio) & (Asignacion.fecha_fin <= fecha_fin))
     )
+<<<<<<< HEAD
+    
+    if exclude_id:
+        conflictos_profesor_query = conflictos_profesor_query.filter(Asignacion.id != exclude_id)
+    
+=======
 
     if exclude_id:
         conflictos_profesor_query = conflictos_profesor_query.filter(Asignacion.id != exclude_id)
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     conflictos_profesor = conflictos_profesor_query.first()
 
     if conflictos_profesor:
@@ -449,8 +546,13 @@ def mensajes():
     mensajes_recibidos = Mensaje.query.filter_by(destinatario_id=current_user.id).order_by(Mensaje.fecha_envio.desc()).all()
     mensajes_enviados = Mensaje.query.filter_by(remitente_id=current_user.id).order_by(Mensaje.fecha_envio.desc()).all()
     usuarios = Usuario.query.filter(Usuario.id != current_user.id).all()
+<<<<<<< HEAD
+    return render_template('mensajes.html', 
+                         mensajes_recibidos=mensajes_recibidos, 
+=======
     return render_template('mensajes.html',
                          mensajes_recibidos=mensajes_recibidos,
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
                          mensajes_enviados=mensajes_enviados,
                          usuarios=usuarios)
 
@@ -460,17 +562,28 @@ def enviar_mensaje():
     destinatario_id = request.form['destinatario_id']
     asunto = request.form['asunto']
     contenido = request.form['contenido']
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     nuevo_mensaje = Mensaje(
         remitente_id=current_user.id,
         destinatario_id=destinatario_id,
         asunto=asunto,
         contenido=contenido
     )
+<<<<<<< HEAD
+    
+    db.session.add(nuevo_mensaje)
+    db.session.commit()
+    
+=======
 
     db.session.add(nuevo_mensaje)
     db.session.commit()
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     flash('Mensaje enviado exitosamente', 'success')
     return redirect(url_for('mensajes'))
 
@@ -480,7 +593,11 @@ def marcar_leido(mensaje_id):
     mensaje = Mensaje.query.get_or_404(mensaje_id)
     if mensaje.destinatario_id != current_user.id:
         abort(403)
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     mensaje.leido = True
     db.session.commit()
     return redirect(url_for('mensajes'))
@@ -491,7 +608,11 @@ def eliminar_mensaje(mensaje_id):
     mensaje = Mensaje.query.get_or_404(mensaje_id)
     if mensaje.destinatario_id != current_user.id and mensaje.remitente_id != current_user.id:
         abort(403)
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d
     db.session.delete(mensaje)
     db.session.commit()
     flash('Mensaje eliminado exitosamente', 'success')
@@ -506,5 +627,9 @@ def logout():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+<<<<<<< HEAD
+    app.run(debug=True)
+=======
     app.run(debug=True)
 
+>>>>>>> 218b8af04c37b1731e6d07da29ce1d70d672731d

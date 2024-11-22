@@ -14,6 +14,7 @@ interface FormType {
     email: string
     password: string
     rPassword: string
+    is_super_admin: boolean 
 }
 
 interface errorsType {
@@ -34,7 +35,8 @@ export const RegisterPage = () => {
     const [formValues, setFormValues] = useState<FormType>({
         email: "",
         password: "",
-        rPassword: ""
+        rPassword: "",
+        is_super_admin: true
     });
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,6 +68,8 @@ export const RegisterPage = () => {
 
         if (!errorTemp.email && !errorTemp.password) {
             onRegister(formValues)
+
+            
         }
     }
 

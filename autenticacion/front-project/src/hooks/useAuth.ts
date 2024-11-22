@@ -1,4 +1,4 @@
-import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister, handleOnSetName } from "../store/auth/thunk"
+import { handleOnCheckingCurrentUser, handleOnLogin, handleOnLogout, handleOnRegister } from "../store/auth/thunk"
 import { FormType } from "../types/authForms"
 
 import { useAppDispatch, useAppSelector } from "./useStore"
@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "./useStore"
 export const useAuth = () => {
 
     const { user } = useAppSelector(state => state.auth)
+    //const { admi } = useAppSelector(state => state.auth)
     const dispatch = useAppDispatch()
 
     const onCheckingCurrentUser = () => {
@@ -24,17 +25,12 @@ export const useAuth = () => {
         dispatch(handleOnLogout())
     }
 
-    const onSetName = (name: string) => {
-        dispatch(handleOnSetName(name))
-    }
-
     return {
         user,
 
         onLogin,
         onRegister,
         onLogout,
-        onCheckingCurrentUser,
-        onSetName
+        onCheckingCurrentUser
     }
 }

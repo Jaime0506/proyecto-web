@@ -4,6 +4,9 @@ import { useAppSelector, useAppDispatch } from "../../hooks";
 import { currentSubject } from "../../store/data/dataSlice";
 import { SubjectsType } from "../../types/redux";
 import { handleOnGetAttendance } from "../../store/auth/thunk";
+import { ListaSalones } from "./asignacion_salones/salones/ListaSalones";
+import FormularioSalon from "./asignacion_salones/salones/FormularioSalones";
+import Dashboard from '../../../../../Dashboard3-main/src/screens/dashboard/DashboardScreen.jsx';
 
 export const HomePage = () => {
   const state = useAppSelector((state) => state.data.subjects);
@@ -29,7 +32,15 @@ export const HomePage = () => {
   };
 
   return (
+
     <div className="flex w-full flex-col">
+          
+      
+      <FormularioSalon></FormularioSalon>
+      <ListaSalones></ListaSalones>
+      <div className="my-4">
+      </div>
+     
       <div className="flex flex-wrap gap-x-4 my-2 mx-20">{renderCards()}</div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { supabase } from "../../supabase/supabase";
-import { FormType } from "../../types/authForms";
+import { FormType, FormTypeA } from "../../types/authForms";
 import { AppDispatch } from "../store";
 import { checking, login, logout, setError } from "./authSlice";
 import { attendance, subjects, tasks as setTasks } from "../data/dataSlice";
@@ -204,6 +204,7 @@ export const handleOnCheckingCurrentUser = () => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: data.user.email,
       role: data.user.user_metadata.role,
+      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
       photoURL: data.user.user_metadata.photoURL,
     };
 
@@ -220,7 +221,6 @@ export const handleOnLogin = (user: FormType) => {
     if (error) {
       console.log(error);
       dispatch(logout(error));
-
       return;
     }
 
@@ -229,12 +229,15 @@ export const handleOnLogin = (user: FormType) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
+      is_super_admin: data.user.user_metadata.is_super_admin || true, // Validamos aquí
       photoURL: data.user.user_metadata.photoURL,
     };
 
     dispatch(login(userLoged));
+    console.log(userLoged.is_super_admin)
   };
 };
+
 
 export const handleOnRegister = (user: FormType) => {
   return async (dispatch: AppDispatch) => {
@@ -247,6 +250,7 @@ export const handleOnRegister = (user: FormType) => {
         data: {
           name: null,
           photoURL: null,
+          is_super_admin: true, // Aquí defines si el usuario es admin
         },
       },
     });
@@ -265,6 +269,7 @@ export const handleOnRegister = (user: FormType) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
       role: data.user.user_metadata.role,
+      is_super_admin: data.user.user_metadata.is_super_admin || false, // Traemos este valor
       photoURL: null,
     };
 
@@ -308,6 +313,7 @@ export const handleOnSetName = (name: string) => {
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: data.user.email,
       role: data.user.user_metadata.role,
+      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
       photoURL: null,
     };
 
@@ -324,5 +330,48 @@ export const handleOnUploadPhoto = (file: File, user: UserType) => {
     if (resposne?.error) {
       dispatch(setError(resposne.error));
     }
+  };
+};
+
+export const handleOnLoginAdmin = (user: FormTypeA) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(checking());
+
+    // Intentar iniciar sesión
+    const { data, error } = await supabase.auth.signInWithPassword(user);
+
+    if (error) {
+      console.log(error);
+      dispatch(logout(null));
+
+      return;
+    }
+
+    // Si el inicio de sesión es exitoso, verificar si el usuario está en la tabla "administrativo"
+    const { data: adminData, error: adminError } = await supabase
+      .schema("public")
+      .from("administrativo")
+      .select()
+      .eq("user_id", data.user.id)
+      .single(); // single() asegura que solo se espera un resultado
+
+    if (adminError || !adminData) {
+      console.log("No es un administrador o hubo un error:", adminError);
+      dispatch(logout(null));
+
+      return;
+    }
+
+    // Crear el objeto del usuario administrador logueado
+    const userLoged = {
+      id: data.user.id,
+      name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
+      email: data.user.email,
+      photoURL: null,
+      is_super_admin: data.user.user_metadata.is_super_admin || false, // Añadir esta propiedad
+      role: "admin", // Asignar un rol específico para administradores
+    };
+
+    dispatch(login(userLoged));
   };
 };
