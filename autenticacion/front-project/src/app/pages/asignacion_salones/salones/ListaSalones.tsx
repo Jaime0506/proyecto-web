@@ -26,6 +26,12 @@ export const ListaSalones: React.FC = () => {
       setLoading(false)
     }
   }
+  
+  const handleRedirect = (): void => {
+    // URL del proyecto en Vercel que contiene el formulario
+    const url = 'https://dashboard3-coral.vercel.app/';
+    window.location.href = url;
+  };
 
   if (loading) return <div>Cargando...</div>
 
@@ -33,9 +39,6 @@ export const ListaSalones: React.FC = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Lista de Salones</h2>
-        <Button onClick={() => {}}>
-          Agregar Salón
-        </Button>
       </div>
       {salones.length === 0 ? (
         <p className="text-center text-gray-500">No hay salones disponibles.</p>
@@ -60,6 +63,14 @@ export const ListaSalones: React.FC = () => {
           ))}
         </div>
       )}
+        <Button onClick={() => {}}>
+          Agregar Salón
+        </Button>
+
+        <Button onClick={handleRedirect}>
+          Ir al Dashboard
+        </Button>
+        <h1>porfa organizar nuevamente la barra lateral y meter ahi la logica para redirigir al dashboard ATT: IRR</h1>
     </div>
   )
 }

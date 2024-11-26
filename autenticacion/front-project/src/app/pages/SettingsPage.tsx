@@ -55,7 +55,7 @@ export const SettingsPage = () => {
                     </div>
                 </div>
                 <button
-                    className="bg-red-500 text-black px-4 py-2 rounded-md border border-transparent transition-all hover:bg-white hover:text-black-500 hover:border-red-500"
+                    className="bg-primary text-white px-4 py-2 rounded-md border border-transparent transition-all hover:bg-white hover:text-black hover:border-red-500"
                     onClick={() => setIsEditing(!isEditing)}
                 >
                     Editar perfil
@@ -126,7 +126,7 @@ export const SettingsPage = () => {
                         <div className="flex space-x-4 mt-6">
                             <button
                                 type="submit"
-                                className="bg-red-500 text-black px-4 py-2 rounded-md border border-transparent transition-all hover:bg-white hover:text-black-500 hover:border-red-500"
+                                className="bg-primary text-white px-4 py-2 rounded-md border border-transparent transition-all hover:bg-white hover:text-black hover:border-primary"
                                 onClick={handleOnSubmitChanges}
                             >
                                 Guardar

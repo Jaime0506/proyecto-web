@@ -96,7 +96,7 @@ export const AdminLoginPage = () => {
             <div className="md:w-[45%] p-8 px-20 flex flex-col gap-20">
                 <div className="flex items-center justify-between">
                     <h1 className="font-bold text-3xl font-roboto">Canvis</h1>
-                    <span className="bg-secondary text-white px-4 py-1 rounded-md">Panel Administrativo</span>
+                    <span className="bg-primary text-white px-4 py-1 rounded-md">Panel Administrativo</span>
                 </div>
 
                 <section className="flex flex-col gap-6">
@@ -174,7 +174,7 @@ export const AdminLoginPage = () => {
                                    
                                     type="submit"
                                     radius="none"
-                                    className="bg-secondary w-full"
+                                    className="bg-primary w-full"
                                     
                                     style={{
                                         color: "#FFFFFF"
@@ -186,7 +186,7 @@ export const AdminLoginPage = () => {
                                 <Button
                                     as={Link}
                                     radius="none"
-                                    className="bg-white border-secondary border-[1.3px] text-black w-full"
+                                    className="bg-white border-primary border-[1.3px] text-black w-full"
                                     to={'/auth/login'}
                                 >
                                     Volver al Login General
@@ -197,11 +197,10 @@ export const AdminLoginPage = () => {
                 </section>
             </div>
 
-            <div className="flex-1 flex items-center justify-center bg-secondary">
+            <div className="flex-1 flex items-center justify-center bg-primary">
                 <Image
                     alt="Admin dashboard illustration"
                     src={admin_login}
-                    className="max-w-[80%]"
                 />
             </div>
         </section>
