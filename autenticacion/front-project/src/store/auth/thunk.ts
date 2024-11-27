@@ -299,7 +299,7 @@ export const handleOnLogin = (user: FormType) => {
       id: data.user.id,
       name: data.user.user_metadata.name ? data.user.user_metadata.name : null,
       email: user.email,
-      role: data.user.user_metadata.role,
+      role: data.user.user_metadata.role ? data.user.user_metadata.role: 'student',
       photoURL: data.user.user_metadata.photoURL,
     };
 
