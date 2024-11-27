@@ -306,6 +306,45 @@ export const handleOnLogin = (user: FormType) => {
     dispatch(login(userLoged));
   };
 };
+
+export const handleOnAdminLogin = (user: FormType)=>{
+  return async (dispatch: AppDispatch)=> {
+    dispatch(checking());
+    
+    const {data, error} = await supabase.auth.signInWithPassword(user);
+
+    if(error){
+      console.log(error);
+      dispatch(logout(error));
+      return;
+    }
+    if(!data.user){
+      dispatch(logout(null));
+      return;
+    }
+
+    const role = data.user.user_metadata.role;
+    if(role !== "admin"){
+      console.log("Este usuario no es administrador");
+      dispatch(logout(error));
+      return;
+    }
+
+    const userLoged: UserType = {
+      id: data.user.id,
+      name: data.user.user_metadata.name ? data.user.user_metadata.name: null,
+      email: user.email,
+      role: data.user.user_metadata.role ? data.user.user_metadata.role: 'student',
+      photoURL: data.user.user_metadata.photoURL,
+    };
+
+    dispatch(login(userLoged));
+    console.log("Inicio de sesión exitoso para administrativo.");
+  };
+};
+
+
+
 export const handleOnRegister = (user: FormType) => {
   return async (dispatch: AppDispatch) => {
     dispatch(checking());
