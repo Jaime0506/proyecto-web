@@ -54,7 +54,7 @@ export const AdminLoginPage = () => {
 
     const errors = validateForm();
     //se necesita revisar esta funcion para el manejo de eroores porque los valores de email y pasword se validan como un boleano y no como string
-    // setErrors(errors);
+    setErrors(errors as AdminErrorsType);
 
     if (!errors.email && !errors.password && !errors.adminCode) {
       try {
