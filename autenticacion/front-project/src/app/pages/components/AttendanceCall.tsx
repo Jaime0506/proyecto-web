@@ -15,6 +15,7 @@ interface AttendanceCall {
 export const AttendanceCall = () => {
   const states = ["si", "no", "re"];
   const attendanceState = useAppSelector((state) => state.data.attendance);
+  const userRole = useAppSelector((state) => state.auth.user);
   const { name } = useAppSelector((state) => state.data.currentSubject) || {};
 
   const dispatch = useAppDispatch();
@@ -53,6 +54,7 @@ export const AttendanceCall = () => {
             value={state}
             defaultChecked={status === state}
             onClick={() => handleOnClick(subject_id, user_id, state, date)}
+            disabled={!(userRole?.role === "docent")}
           />
         </div>
       ))}
@@ -93,9 +95,18 @@ export const AttendanceCall = () => {
       </Table>
       
       <div className="flex justify-center">
-        <Button color="default" variant="flat" onClick={()=>{handleSubmit()}} className="w-1">
-          Enviar
-        </Button>
+      {userRole?.role === "docent" && (
+          <Button
+            color="default"
+            variant="flat"
+            onClick={() => {
+              handleSubmit();
+            }}
+            className="w-1"
+          >
+            Enviar
+          </Button>
+        )}        
       </div>
     </div>
   );
