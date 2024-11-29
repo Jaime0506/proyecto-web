@@ -56,10 +56,11 @@ export const InfoTask = () => {
   const handleSave = () => {
     if (taskId) {
       dispatch(handleUpdateTask(taskId, formData, user?.id, state?.subject_id)); // Llamar la acción para actualizar la tarea
-      navigate("/app/board/Tasks"); // Redirigir después de guardar los cambios
+      navigate("/app/board/Tasks");
       return
     }
     attendance?.map((elem)=>{dispatch(handleOnCreateTask(formData, elem.user_id, elem.subject_id));})
+    navigate("/app/board/Tasks");
   };
 
   return (

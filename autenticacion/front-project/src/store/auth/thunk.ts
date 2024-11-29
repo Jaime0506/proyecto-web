@@ -50,7 +50,6 @@ export const handleOnCreateTask = (taskData: TaskData, user:any, subject_id: any
   return async (dispatch: AppDispatch) => {
     const { title, description, dueDate } = taskData;
 
-    // Inserción de la tarea en la base de datos de Supabase
     const { data, error } = await supabase
       .schema("gr7")
       .from("task")
@@ -67,18 +66,17 @@ export const handleOnCreateTask = (taskData: TaskData, user:any, subject_id: any
 
     if (error) {
       console.log("Error al crear tarea:", error);
-      return; // Salimos si ocurre un error
+      return;
     }
 
     if (!data) {
       console.log("No se recibió ninguna tarea después de la inserción.");
-      return; // Salimos si 'data' es null o undefined
+      return;
     }
 
     console.log("Tarea creada:", data);
 
-    // Despachar la acción 'setTasks' solo si data no es null
-    dispatch(setTasks(data)); // Actualiza el estado de Redux con la nueva tarea
+    dispatch(setTasks(data)); 
   };
 };
 

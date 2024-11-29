@@ -23,7 +23,6 @@ export const Tasks = () => {
   useEffect(()=>{
     if(!(userState?.role === "docent")){
     dispatch(handleOnGetTasks(userState?.id, state?.subject_id));
-    console.log('hsisjsj')
   } else {
     dispatch(handleGetTaskDocent(state?.subject_id))
   }},[])
