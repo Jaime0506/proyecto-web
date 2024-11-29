@@ -95,7 +95,7 @@ export const FeedBack = () => {
         
         {isFeedbackSubmitted && (
           <p className="text-green-600 mt-4 text-center">
-            La retroalimentación ya fue enviada.
+            La retroalimentación ya fue enviada
           </p>
         )}
       </Card>
