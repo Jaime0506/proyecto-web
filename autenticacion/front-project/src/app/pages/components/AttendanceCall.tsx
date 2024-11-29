@@ -22,8 +22,8 @@ export const AttendanceCall = () => {
   const location = useLocation();
   const date = location.state?.session?.date;
 
-  const [names, setNames] = useState<Record<string, string>>({});
   const [attendance, setAttendance] = useState<AttendanceCall[]>([]);
+  const [names, setNames] = useState<Record<string, string>>({});
   
   const fetchName = async (user_id: string) => {
     if (!names[user_id]) {
